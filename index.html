@@ -124,7 +124,6 @@
             background: radial-gradient(circle at 50% 0%, #1e293b 0%, #000000 100%);
             border: 2px solid #1e293b;
             border-radius: 12px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.9), inset 0 0 50px rgba(0,0,0,0.9);
             overflow: hidden;
             transition: background 1s ease; 
         }
@@ -276,7 +275,6 @@
         <div class="header">
             <div class="header-left">
                 <div class="stat-box pause-btn" id="pause-game-btn" title="Pausar y Menú">☰</div>
-                <div class="stat-box pause-btn" id="mute-btn" title="Música">🔊</div>
             </div>
             <div class="stat-box score">Pts: <span id="score-display">0</span></div>
             <div class="stat-box level-text" id="world-level-display">MUNDO 1 - NIVEL 1</div>
@@ -457,46 +455,51 @@
             }
         }
 
-        // --- SISTEMA DE MÚSICA ---
-        const audioMenu = new Audio("https://cdn.pixabay.com/download/audio/2022/03/15/audio_17b3cce0f5.mp3?filename=cyberpunk-2099-10701.mp3");
-        const audioGame = new Audio("https://cdn.pixabay.com/download/audio/2021/11/25/audio_91b32e02f9.mp3?filename=synthwave-80s-110045.mp3");
-        audioMenu.loop = true; audioMenu.volume = 0.35;
-        audioGame.loop = true; audioGame.volume = 0.25;
-        let isMuted = false;
-        let musicStarted = false;
+        // --- SISTEMA DE SONIDOS SINTETIZADOS (Sin lag de descarga) ---
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        let audioCtx;
 
-        function switchMusic(type) {
-            if (isMuted) return;
-            if (type === 'menu') {
-                audioGame.pause();
-                audioMenu.play().catch(e => console.log("Esperando interacción para música"));
-            } else if (type === 'game') {
-                audioMenu.pause();
-                audioGame.play().catch(e => console.log("Esperando interacción para música"));
+        function initAudio() {
+            if (!audioCtx) {
+                audioCtx = new AudioContext();
+            } else if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
             }
         }
 
-        document.addEventListener('click', (e) => {
-            // Activar la música al primer clic en la pantalla
-            if (!musicStarted && !isMuted) {
-                musicStarted = true;
-                if (isPlaying && !isPaddleExploding) switchMusic('game');
-                else switchMusic('menu');
+        function playSound(type) {
+            if (!audioCtx || isPaddleExploding) return;
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            
+            const osc = audioCtx.createOscillator();
+            const gainNode = audioCtx.createGain();
+            
+            osc.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+            
+            osc.type = 'sine'; // Sonido clásico
+            
+            if (type === 'paddle') {
+                // Sonido "Ping" grave para la raqueta
+                osc.frequency.setValueAtTime(350, audioCtx.currentTime);
+                gainNode.gain.setValueAtTime(0.5, audioCtx.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.1);
+            } else if (type === 'brick') {
+                // Sonido "Pong" agudo para los bloques
+                osc.frequency.setValueAtTime(700, audioCtx.currentTime);
+                gainNode.gain.setValueAtTime(0.3, audioCtx.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.1);
             }
-        }, { once: true });
+        }
 
-        document.getElementById('mute-btn').addEventListener('click', (e) => {
-            e.stopPropagation(); // Evita que dispare la bola al hacer clic
-            isMuted = !isMuted;
-            document.getElementById('mute-btn').innerText = isMuted ? '🔇' : '🔊';
-            if (isMuted) {
-                audioMenu.pause(); audioGame.pause();
-            } else {
-                musicStarted = true;
-                if (isPlaying && !isPaddleExploding) switchMusic('game');
-                else switchMusic('menu');
-            }
-        });
+        // Iniciar audio en la primera interacción
+        document.addEventListener('click', initAudio, { once: true });
+        document.addEventListener('touchstart', initAudio, { once: true });
+
 
         // --- CONFIGURACIÓN PRINCIPAL DEL JUEGO ---
         const canvas = document.getElementById('gameCanvas');
@@ -513,21 +516,6 @@
         }
         resizeCanvas();
         window.addEventListener('resize', resizeCanvas);
-
-        // Polyfill robusto para dibujar rectángulos redondeados sin crashear en iOS antiguos
-        function drawRoundRect(ctx, x, y, width, height, radius) {
-            ctx.beginPath();
-            ctx.moveTo(x + radius, y);
-            ctx.lineTo(x + width - radius, y);
-            ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
-            ctx.lineTo(x + width, y + height - radius);
-            ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
-            ctx.lineTo(x + radius, y + height);
-            ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
-            ctx.lineTo(x, y + radius);
-            ctx.quadraticCurveTo(x, y, x + radius, y);
-            ctx.closePath();
-        }
 
         // --- SISTEMA DE MUNDOS Y FONDOS ---
         const worldThemes = [
@@ -663,7 +651,6 @@
             currentStarColor = theme.starColor;
             
             ui.worldLvl.style.color = theme.textColor;
-            // Añadido un contorno negro sólido para asegurar la lectura en cualquier fondo
             ui.worldLvl.style.textShadow = `1px 1px 2px #000, -1px -1px 2px #000, 1px -1px 2px #000, -1px 1px 2px #000, ${theme.textShadow}`;
             
             let lvlInWorld = ((level - 1) % 10) + 1;
@@ -730,7 +717,6 @@
             ui.start.classList.add('active');
         });
 
-        // Botones de Ranking
         document.getElementById('open-ranking-btn').addEventListener('click', () => {
             renderMainRanking();
             ui.start.classList.remove('active');
@@ -748,14 +734,12 @@
             ui.gameOver.classList.remove('active');
             updateWorldTheme();
             ui.start.classList.add('active');
-            switchMusic('menu');
         });
 
         document.getElementById('game-beaten-menu-btn').addEventListener('click', () => {
             location.reload();
         });
 
-        // Botón Subir Puntuación
         ui.submitScoreBtn.addEventListener('click', async () => {
             const alias = ui.playerNameInput.value.trim().toUpperCase();
             if(!alias) return;
@@ -778,13 +762,11 @@
             }
         });
 
-        // Botones de Pausa
         document.getElementById('pause-game-btn').addEventListener('click', () => {
             if (isPlaying && !isPaddleExploding) {
                 isPlaying = false;
                 cancelAnimationFrame(animationId);
                 ui.pause.classList.add('active');
-                switchMusic('menu');
             }
         });
 
@@ -792,7 +774,6 @@
             ui.pause.classList.remove('active');
             isPlaying = true;
             update();
-            switchMusic('game');
         });
 
         document.getElementById('quit-to-menu-btn').addEventListener('click', () => {
@@ -802,12 +783,11 @@
             resetAllEffects();
             updateWorldTheme();
             ui.start.classList.add('active');
-            switchMusic('menu');
         });
 
         document.getElementById('next-level-btn').addEventListener('click', nextLevel);
 
-        // --- DIBUJO ---
+        // --- DIBUJO OPTIMIZADO PARA MÓVILES (Sin sombras) ---
         function drawBackground() {
             ctx.clearRect(0, 0, GAME_WIDTH, GAME_HEIGHT);
 
@@ -822,9 +802,7 @@
                 currentOpacity = Math.max(0.1, Math.min(1, currentOpacity));
 
                 ctx.fillStyle = `rgba(${currentStarColor}, ${currentOpacity})`;
-                ctx.beginPath();
-                ctx.arc(s.x, s.y, s.size, 0, Math.PI * 2);
-                ctx.fill();
+                ctx.fillRect(s.x, s.y, s.size * 2, s.size * 2); // Usando cuadrados en vez de círculos es más rápido
             });
         }
 
@@ -837,13 +815,11 @@
             const h = 28;
             const offsetY = 70;
 
-            // Calculamos un color base aleatorio para este nivel
             const levelBaseHue = Math.floor(Math.random() * 360);
 
             for (let r = 0; r < rows; r++) {
                 bricks[r] = [];
                 for (let c = 0; c < cols; c++) {
-                    
                     let create = false;
                     if (levelNum % 5 === 0) create = (r + c) % 2 === 0; 
                     else if (levelNum % 4 === 0) create = r % 2 === 0 || c % 2 === 0; 
@@ -861,17 +837,13 @@
                         }
 
                         let pUp = null;
-                        // Reducimos la probabilidad de que salgan estrellas (al 15%)
                         if (Math.random() > 0.85) {
                             const keys = Object.keys(powerUpTypes);
                             keys.push('life', 'life', 'life', 'life'); 
                             pUp = keys[Math.floor(Math.random() * keys.length)];
-                            
-                            // Forzamos a que el bloque estrella tenga siempre 1 de vida
                             hp = 1;
                         }
 
-                        // El color ahora depende de la columna (c) creando un gradiente armónico
                         const colHue = (levelBaseHue + (c * (360 / cols))) % 360;
                         const blockColor = `hsl(${colHue}, 80%, 60%)`;
 
@@ -892,7 +864,6 @@
             }
         }
 
-        // --- SISTEMA DE BOLAS ---
         function createBall() {
             return {
                 x: paddle.x + paddle.width / 2,
@@ -928,12 +899,13 @@
                         b.dx = b.speed * Math.sin(startAngle);
                         b.dy = -b.speed * Math.cos(startAngle);
                         b.active = true;
+                        
+                        playSound('paddle');
                     }
                 });
             }
         }
 
-        // --- SISTEMA DE PISTOLAS ---
         function shoot() {
             if (effects.gun.timer > 0 && isPlaying && !isPaddleExploding) {
                 bullets.push({ x: paddle.x + 18, y: paddle.y - 10, w: 4, h: 12, speed: 12, color: '#fcd34d', history: [] });
@@ -949,12 +921,8 @@
                     ctx.fillRect(pos.x - b.w/2, pos.y, b.w, b.h);
                 });
 
-                drawRoundRect(ctx, b.x - b.w/2, b.y, b.w, b.h, 2);
                 ctx.fillStyle = b.color;
-                ctx.shadowBlur = 10;
-                ctx.shadowColor = b.color;
-                ctx.fill();
-                ctx.shadowBlur = 0;
+                ctx.fillRect(b.x - b.w/2, b.y, b.w, b.h);
             });
         }
 
@@ -982,6 +950,7 @@
                                 brick.hp -= 1;
                                 score += 10;
                                 ui.score.innerText = score;
+                                playSound('brick');
 
                                 if (brick.hp <= 0 && brick.powerUp) {
                                     drops.push({
@@ -1000,7 +969,6 @@
             }
         }
 
-        // --- DIBUJADO DE GRÁFICOS ---
         function drawPaddle() {
             if (isPaddleExploding) return; 
 
@@ -1008,41 +976,29 @@
             if(effects.expand.timer > 0) pColor = '#34d399';
             else if(effects.shrink.timer > 0) pColor = '#ef4444';
 
-            ctx.beginPath();
-            ctx.moveTo(paddle.x, paddle.y + paddle.height);
-            ctx.lineTo(paddle.x + 15, paddle.y);
-            ctx.lineTo(paddle.x + paddle.width - 15, paddle.y);
-            ctx.lineTo(paddle.x + paddle.width, paddle.y + paddle.height);
-            ctx.closePath();
+            // Raqueta optimizada con fillRect en lugar de degradados y paths complejos
+            ctx.fillStyle = pColor;
+            ctx.fillRect(paddle.x + 10, paddle.y, paddle.width - 20, paddle.height);
+            ctx.fillRect(paddle.x, paddle.y + 5, paddle.width, paddle.height - 5);
             
-            let gradient = ctx.createLinearGradient(paddle.x, paddle.y, paddle.x, paddle.y + paddle.height);
-            gradient.addColorStop(0, '#ffffff');
-            gradient.addColorStop(0.4, pColor);
-            gradient.addColorStop(1, '#020617');
-
-            ctx.fillStyle = gradient;
-            ctx.fill();
-
-            drawRoundRect(ctx, paddle.x + paddle.width/2 - 20, paddle.y + 4, 40, paddle.height - 8, 3);
             ctx.fillStyle = '#ffffff';
-            ctx.fill();
+            ctx.fillRect(paddle.x + paddle.width/2 - 20, paddle.y + 4, 40, paddle.height - 8);
 
             if (effects.gun.timer > 0) {
                 ctx.fillStyle = '#a855f7';
                 ctx.fillRect(paddle.x + 15, paddle.y - 12, 6, 16);
                 ctx.fillRect(paddle.x + paddle.width - 21, paddle.y - 12, 6, 16);
-                
                 ctx.fillStyle = '#ffffff';
                 ctx.fillRect(paddle.x + 16, paddle.y - 14, 4, 4);
                 ctx.fillRect(paddle.x + paddle.width - 20, paddle.y - 14, 4, 4);
             }
 
             if (effects.magnet.timer > 0) {
+                ctx.strokeStyle = '#f43f5e';
+                ctx.lineWidth = 3;
                 ctx.beginPath();
                 ctx.moveTo(paddle.x + 10, paddle.y);
                 ctx.lineTo(paddle.x + paddle.width - 10, paddle.y);
-                ctx.strokeStyle = '#f43f5e';
-                ctx.lineWidth = 3;
                 ctx.stroke();
             }
         }
@@ -1060,48 +1016,23 @@
                         let pt = ball.history[i];
                         let opacity = 1 - (i / ball.history.length);
                         ctx.beginPath();
-                        ctx.arc(pt.x, pt.y, ball.radius * 0.85 * opacity, 0, Math.PI * 2);
-                        ctx.fillStyle = `rgba(255, 255, 255, ${opacity * 0.4})`;
+                        ctx.arc(pt.x, pt.y, ball.radius * 0.8 * opacity, 0, Math.PI * 2);
+                        ctx.fillStyle = `rgba(255, 255, 255, ${opacity * 0.3})`;
                         ctx.fill();
                     }
                 }
 
-                // Efecto de brillo optimizado (círculo extra detrás)
-                ctx.beginPath();
-                ctx.arc(ball.x, ball.y, ball.radius * 1.5, 0, Math.PI * 2);
-                ctx.fillStyle = glowColor;
-                ctx.fill();
-                ctx.closePath();
-
+                // Círculo principal optimizado
                 ctx.beginPath();
                 ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI * 2);
                 ctx.fillStyle = baseColor;
                 ctx.fill();
-                ctx.closePath();
-
-                ctx.save();
-                ctx.beginPath();
-                ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI * 2);
-                ctx.clip();
-
-                ctx.strokeStyle = '#ef4444';
-                ctx.lineWidth = 1.5;
-
-                ctx.beginPath();
-                ctx.arc(ball.x - ball.radius, ball.y, ball.radius * 1.2, -Math.PI/3, Math.PI/3);
-                ctx.stroke();
-
-                ctx.beginPath();
-                ctx.arc(ball.x + ball.radius, ball.y, ball.radius * 1.2, Math.PI - Math.PI/3, Math.PI + Math.PI/3);
-                ctx.stroke();
-
-                ctx.restore();
 
                 if (ball.attached && isPlaying) {
                     ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
                     ctx.font = '16px Arial';
                     ctx.textAlign = 'center';
-                    ctx.fillText("Clic/Toca para lanzar", GAME_WIDTH / 2, paddle.y - 40);
+                    ctx.fillText("Toca para lanzar", GAME_WIDTH / 2, paddle.y - 40);
                 }
             });
         }
@@ -1112,20 +1043,20 @@
                     let b = bricks[r][c];
                     if (b && b.hp > 0) {
                         let bColor = b.poisoned && (Math.floor(Date.now() / 100) % 2 === 0) ? '#4ade80' : b.color;
-                        ctx.fillStyle = bColor;
-                        drawRoundRect(ctx, b.x, b.y, b.w, b.h, 4);
-                        ctx.fill();
                         
-                        ctx.strokeStyle = 'rgba(0,0,0,0.4)';
-                        ctx.lineWidth = 2;
-                        ctx.stroke();
-
+                        // Bloques súper rápidos con fillRect nativo
+                        ctx.fillStyle = bColor;
+                        ctx.fillRect(b.x, b.y, b.w, b.h);
+                        
                         ctx.fillStyle = 'rgba(255, 255, 255, 0.2)';
-                        drawRoundRect(ctx, b.x + 2, b.y + 2, b.w - 4, b.h * 0.4, 2);
-                        ctx.fill();
+                        ctx.fillRect(b.x + 2, b.y + 2, b.w - 4, b.h * 0.4);
+
+                        ctx.strokeStyle = 'rgba(0,0,0,0.4)';
+                        ctx.lineWidth = 1;
+                        ctx.strokeRect(b.x, b.y, b.w, b.h);
 
                         if (b.powerUp) {
-                            ctx.fillStyle = 'rgba(255, 255, 255, 0.95)';
+                            ctx.fillStyle = '#ffffff';
                             ctx.font = '22px Arial'; 
                             ctx.textAlign = 'center';
                             ctx.textBaseline = 'middle';
@@ -1136,8 +1067,7 @@
                             ctx.font = 'bold 16px Arial';
                             ctx.textAlign = 'center';
                             ctx.textBaseline = 'middle';
-                            // Sombra ligera y rápida en texto en lugar de shadowBlur
-                            ctx.fillStyle = 'rgba(0,0,0,0.5)';
+                            ctx.fillStyle = 'rgba(0,0,0,0.6)';
                             ctx.fillText(b.hp, b.x + b.w / 2 + 1, b.y + b.h / 2 + 1);
                             ctx.fillStyle = '#ffffff';
                             ctx.fillText(b.hp, b.x + b.w / 2, b.y + b.h / 2);
@@ -1151,13 +1081,11 @@
             drops.forEach(drop => {
                 let info = powerUpTypes[drop.type];
                 
-                drawRoundRect(ctx, drop.x, drop.y, drop.w, drop.h, 8);
                 ctx.fillStyle = info.color;
-                ctx.fill();
+                ctx.fillRect(drop.x, drop.y, drop.w, drop.h);
 
                 ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
-                drawRoundRect(ctx, drop.x + 2, drop.y + 2, drop.w - 4, drop.h * 0.4, 4);
-                ctx.fill();
+                ctx.fillRect(drop.x + 2, drop.y + 2, drop.w - 4, drop.h * 0.4);
 
                 ctx.fillStyle = info.textC;
                 ctx.font = 'bold 16px Arial';
@@ -1341,6 +1269,7 @@
                     
                     if (b.dy > 0) {
                         b.y = paddle.y - b.radius; 
+                        playSound('paddle');
                         
                         if (effects.magnet.timer > 0) {
                             b.attached = true;
@@ -1382,6 +1311,7 @@
                                 if (effects.fireball.timer > 0) damage = 100; 
 
                                 brick.hp -= damage;
+                                playSound('brick');
                                 
                                 if (effects.poison.timer > 0 && brick.hp > 0) {
                                     brick.poisoned = true;
@@ -1561,7 +1491,6 @@
             createBricks(level);
             resetBalls();
             isPlaying = true;
-            switchMusic('game');
             update();
         }
 
@@ -1582,7 +1511,6 @@
             createBricks(level);
             resetBalls();
             isPlaying = true;
-            switchMusic('game');
             update();
         }
 
@@ -1599,7 +1527,6 @@
             createBricks(level);
             resetBalls();
             isPlaying = true;
-            switchMusic('game');
             update();
         }
 
@@ -1607,7 +1534,6 @@
             isPlaying = false;
             cancelAnimationFrame(animationId);
             ui.fScore.innerText = score;
-            switchMusic('menu');
             
             if (score > 0) {
                 ui.saveScoreSec.style.display = 'flex';
@@ -1627,14 +1553,12 @@
         function showVictory() {
             isPlaying = false;
             cancelAnimationFrame(animationId);
-            switchMusic('menu');
             ui.victory.classList.add('active');
         }
 
         function showGameBeaten() {
             isPlaying = false;
             cancelAnimationFrame(animationId);
-            switchMusic('menu');
             document.getElementById('absolute-final-score').innerText = score;
             ui.beaten.classList.add('active');
         }
@@ -1669,7 +1593,7 @@
         document.addEventListener('mousemove', mouseMoveHandler);
 
         document.addEventListener('mousedown', (e) => {
-            if(e.target.tagName !== 'BUTTON' && e.target.tagName !== 'INPUT' && e.target.id !== 'mute-btn' && !e.target.classList.contains('pause-btn')) {
+            if(e.target.tagName !== 'BUTTON' && e.target.tagName !== 'INPUT' && !e.target.classList.contains('pause-btn')) {
                 if (isPlaying) {
                     launchBall();
                     shoot(); 
@@ -1696,7 +1620,7 @@
         // Cambiado a 'document' para poder tocar y disparar desde cualquier sitio
         document.addEventListener('touchstart', (e) => {
             if(isPlaying) {
-                if(e.target.tagName !== 'BUTTON' && e.target.tagName !== 'INPUT' && e.target.id !== 'mute-btn' && !e.target.classList.contains('pause-btn')) {
+                if(e.target.tagName !== 'BUTTON' && e.target.tagName !== 'INPUT' && !e.target.classList.contains('pause-btn')) {
                     e.preventDefault();
                     launchBall();
                     shoot();
