@@ -34,42 +34,38 @@
         .header {
             width: 100%;
             display: flex;
-            flex-wrap: wrap;
-            gap: 5px;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 5px;
+            margin-bottom: 8px;
             padding: 0 5px;
-            font-weight: bold;
-            font-size: 1rem;
-            text-shadow: 0 0 10px rgba(255,255,255,0.3);
-        }
-
-        .header-left {
-            display: flex;
-            gap: 5px;
         }
 
         .stat-box {
-            background: rgba(255,255,255,0.05);
-            padding: 4px 10px;
-            border-radius: 6px;
-            border: 1px solid rgba(255,255,255,0.1);
-            backdrop-filter: blur(5px);
+            background: rgba(0, 0, 0, 0.7);
+            padding: 6px 12px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
             white-space: nowrap;
+            font-weight: bold;
+            font-size: 0.9rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
         }
+
         .score { color: #38bdf8; }
         .lives { color: #fb7185; }
+        .world-info { 
+            font-size: 1rem; 
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
         .pause-btn { 
             cursor: pointer; background: #38bdf8; color: #020617; 
-            font-weight: 900; padding: 4px 12px; transition: transform 0.1s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            font-weight: 900; padding: 4px 14px; border-radius: 6px;
         }
-        .pause-btn:active { transform: scale(0.9); }
 
-        /* --- HUD PODERES ACTIVOS --- */
+        /* --- HUD PODERES --- */
         #active-powers-hud {
             width: 100%;
             display: flex;
@@ -77,21 +73,19 @@
             gap: 5px;
             min-height: 30px;
             margin-bottom: 5px;
-            padding: 0 5px;
         }
 
         .power-bar-container {
             flex: 1;
-            min-width: 80px;
-            background: rgba(0,0,0,0.5);
+            min-width: 90px;
+            background: rgba(0,0,0,0.6);
             border: 1px solid rgba(255,255,255,0.2);
             border-radius: 4px;
             position: relative;
-            height: 24px;
+            height: 22px;
             overflow: hidden;
             display: flex;
             align-items: center;
-            box-shadow: 0 0 5px rgba(0,0,0,0.5);
         }
 
         .power-bar-fill {
@@ -100,7 +94,6 @@
             width: 100%;
             transform-origin: left;
             transition: transform 0.1s linear;
-            z-index: 1;
         }
 
         .power-bar-text {
@@ -108,11 +101,10 @@
             z-index: 2;
             width: 100%;
             text-align: center;
-            font-size: 0.75rem;
+            font-size: 0.65rem;
             font-weight: bold;
             color: white;
             text-shadow: 1px 1px 2px black;
-            letter-spacing: 1px;
         }
 
         /* --- LIENZO --- */
@@ -120,27 +112,22 @@
             position: relative;
             width: 100%;
             aspect-ratio: 3 / 4;
-            max-height: 75vh;
-            background: radial-gradient(circle at 50% 0%, #1e293b 0%, #000000 100%);
+            max-height: 70vh;
+            background: #000;
             border: 2px solid #1e293b;
             border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.9);
             overflow: hidden;
-            transition: background 1s ease; 
         }
 
-        canvas {
-            display: block;
-            width: 100%;
-            height: 100%;
-            cursor: none;
-        }
+        canvas { display: block; width: 100%; height: 100%; cursor: none; }
 
-        /* --- PANTALLAS (OVERLAYS) --- */
+        /* --- OVERLAYS --- */
         .overlay {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(2, 6, 23, 0.85);
-            backdrop-filter: blur(4px);
+            background: rgba(2, 6, 23, 0.92);
+            backdrop-filter: blur(6px);
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -149,136 +136,67 @@
             opacity: 0;
             pointer-events: none;
             transition: opacity 0.3s ease;
-            z-index: 10;
+            z-index: 100;
             padding: 20px;
         }
-
         .overlay.active { opacity: 1; pointer-events: all; }
-        .overlay h2 { font-size: 2.2rem; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 2px; }
-        .overlay p { font-size: 1.1rem; margin-bottom: 20px; color: #cbd5e1; }
-
-        #start-screen h2 { color: #38bdf8; text-shadow: 0 0 15px rgba(56,189,248,0.6); }
-        #game-over-screen h2 { color: #fb7185; text-shadow: 0 0 15px rgba(251,113,133,0.6); }
-        #victory-screen h2 { color: #34d399; text-shadow: 0 0 15px rgba(52,211,153,0.6); }
-        #pause-screen h2 { color: #fcd34d; text-shadow: 0 0 15px rgba(252,211,77,0.6); }
 
         .btn {
             background: #38bdf8; color: #0f172a; border: none;
-            padding: 12px 25px; font-size: 1.1rem; font-weight: 800;
-            border-radius: 8px; cursor: pointer;
-            box-shadow: 0 4px 0 #0284c7, 0 0 15px rgba(56,189,248,0.5);
-            transition: all 0.1s; text-transform: uppercase;
-            margin-top: 10px;
-            width: 100%;
-            max-width: 250px;
+            padding: 14px 28px; font-size: 1.1rem; font-weight: 800;
+            border-radius: 8px; cursor: pointer; margin-top: 12px;
+            width: 100%; max-width: 260px; text-transform: uppercase;
+            box-shadow: 0 4px 0 #0284c7; transition: all 0.1s;
         }
-        .btn:active { transform: translateY(4px); box-shadow: 0 0 0 #0284c7, 0 0 10px rgba(56,189,248,0.5); }
-        .btn:disabled { opacity: 0.5; cursor: not-allowed; box-shadow: none; transform: none; }
-        
-        .btn-secondary {
-            background: #475569; color: #f8fafc;
-            box-shadow: 0 4px 0 #334155, 0 0 10px rgba(71,85,105,0.5);
-        }
-        .btn-secondary:active { box-shadow: 0 0 0 #334155, 0 0 10px rgba(71,85,105,0.5); }
+        .btn:active { transform: translateY(4px); box-shadow: 0 0 0 #0284c7; }
+        .btn-secondary { background: #475569; color: white; box-shadow: 0 4px 0 #1e293b; }
 
-        .mobile-hint { margin-top: 10px; font-size: 0.85rem; color: #64748b; text-align: center; }
-
-        /* --- INPUT NOMBRE --- */
-        .name-input-group {
-            background: rgba(0,0,0,0.6);
+        .leaderboard {
+            background: rgba(255,255,255,0.05);
+            border-radius: 12px;
             padding: 15px;
-            border-radius: 8px;
-            border: 1px solid #fcd34d;
-            margin-top: 10px;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            align-items: center;
-        }
-        .name-input {
-            padding: 10px;
-            font-size: 1.1rem;
-            border-radius: 6px;
-            border: 1px solid #475569;
-            background: #0f172a;
-            color: #f8fafc;
-            text-align: center;
             width: 100%;
-            max-width: 200px;
-            outline: none;
-            text-transform: uppercase;
+            max-width: 350px;
+            margin: 15px 0;
         }
-        .name-input:focus { border-color: #38bdf8; box-shadow: 0 0 10px rgba(56, 189, 248, 0.5); }
+        .leaderboard-list { list-style: none; padding: 0; }
+        .leaderboard-list li {
+            display: flex; justify-content: space-between;
+            padding: 8px 0; font-size: 1rem; border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        .leaderboard-list li span:last-child { font-weight: bold; color: #38bdf8; }
+        .current-user { color: #fcd34d !important; font-weight: bold; }
 
-        /* --- SELECTOR DE NIVELES Y TABLAS --- */
-        #level-select-container {
-            width: 100%;
-            max-height: 60vh;
-            overflow-y: auto;
-            background: rgba(0,0,0,0.5);
-            border: 1px solid #334155;
-            border-radius: 8px;
-            padding: 15px;
-            margin-bottom: 15px;
-        }
-        
-        #level-select-container::-webkit-scrollbar { width: 6px; }
-        #level-select-container::-webkit-scrollbar-thumb { background: #475569; border-radius: 3px; }
-
-        .world-section { margin-bottom: 20px; }
-        .world-title {
-            font-size: 1.1rem; text-align: left;
-            border-bottom: 1px solid #475569; padding-bottom: 5px; margin-bottom: 10px;
-            text-transform: uppercase; letter-spacing: 1px;
-        }
-        .level-grid {
+        #level-select-grid {
             display: grid;
             grid-template-columns: repeat(5, 1fr);
             gap: 8px;
+            max-height: 50vh;
+            overflow-y: auto;
+            width: 100%;
+            padding: 10px;
         }
-        .level-btn {
-            background: #1e293b; color: #38bdf8;
-            border: 1px solid #38bdf8; border-radius: 6px;
-            padding: 10px 0; font-size: 1.1rem; font-weight: bold;
-            cursor: pointer; transition: all 0.2s;
+        .lvl-box {
+            background: #1e293b; border: 1px solid #38bdf8; padding: 12px 0;
+            border-radius: 6px; cursor: pointer; font-weight: bold;
         }
-        .level-btn:hover { background: #38bdf8; color: #0f172a; }
-        .level-btn.locked {
-            background: #0f172a; color: #475569;
-            border: 1px solid #334155; cursor: not-allowed;
-            box-shadow: none;
-        }
+        .lvl-box.locked { opacity: 0.3; cursor: not-allowed; border-color: #475569; }
 
-        .leaderboard {
-            background: rgba(0,0,0,0.6);
-            border: 1px solid #334155;
-            border-radius: 8px;
-            padding: 15px;
-            width: 80%;
-            max-width: 350px;
-            margin-top: 10px;
+        .name-input {
+            width: 100%; max-width: 200px; padding: 12px; font-size: 1.2rem;
+            text-align: center; border-radius: 8px; border: 2px solid #334155;
+            background: #0f172a; color: white; outline: none; margin: 10px 0;
         }
-        .leaderboard-list { list-style: none; padding: 0; text-align: left; }
-        .leaderboard-list li {
-            display: flex; justify-content: space-between;
-            padding: 6px 0; font-size: 1.1rem; color: #e2e8f0;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-        }
-        .leaderboard-list li:last-child { border-bottom: none; }
-        .leaderboard-list li span:last-child { font-weight: bold; color: #38bdf8; }
-        .loading-text { color: #94a3b8; font-style: italic; text-align: center; width: 100%; display: block; }
     </style>
 </head>
 <body>
 
     <div id="game-container">
         <div class="header">
-            <div class="header-left">
-                <div class="stat-box pause-btn" id="pause-game-btn" title="Pausar y Menú">☰</div>
-            </div>
-            <div class="stat-box score">Pts: <span id="score-display">0</span></div>
-            <div class="stat-box level-text" id="world-level-display">MUNDO 1 - NIVEL 1</div>
-            <div class="stat-box lives">Vidas: <span id="lives-display">3</span></div>
+            <div class="stat-box pause-btn" id="btn-pause">☰</div>
+            <div class="stat-box score">PTS: <span id="ui-score">0</span></div>
+            <div class="stat-box world-info" id="ui-world-level">MUNDO 1 - NIVEL 1</div>
+            <div class="stat-box lives">❤️ <span id="ui-lives">3</span></div>
         </div>
 
         <div id="active-powers-hud"></div>
@@ -287,905 +205,415 @@
             <canvas id="gameCanvas"></canvas>
 
             <!-- Pantalla Inicio -->
-            <div id="start-screen" class="overlay active">
-                <h2>LASER PANIC</h2>
-                <p id="continue-info">Progreso guardado: Nivel 1</p>
-                <button class="btn" id="start-btn">Continuar / Jugar</button>
-                <button class="btn btn-secondary" id="open-level-select-btn">Seleccionar Nivel</button>
-                <button class="btn btn-secondary" id="open-ranking-btn">Ranking Global</button>
-            </div>
-
-            <!-- Pantalla Selector Niveles -->
-            <div id="level-select-screen" class="overlay">
-                <h2 style="font-size: 1.8rem; margin-bottom: 5px;">Mundos</h2>
-                <div id="level-select-container"></div>
-                <button class="btn btn-secondary" id="close-level-select-btn">Volver</button>
+            <div id="screen-start" class="overlay active">
+                <h1 style="font-size: 3rem; color: #38bdf8; text-shadow: 0 0 20px #0ea5e9;">LASER PANIC</h1>
+                <p id="ui-saved-info" style="margin-bottom: 20px;">Cargando...</p>
+                <button class="btn" id="btn-play">Jugar / Continuar</button>
+                <button class="btn btn-secondary" id="btn-open-levels">Elegir Nivel</button>
+                <button class="btn btn-secondary" id="btn-open-ranking">Ranking Mundial</button>
             </div>
 
             <!-- Pantalla Ranking -->
-            <div id="ranking-screen" class="overlay">
-                <h2 style="font-size: 1.8rem; margin-bottom: 5px; color: #fbbf24; text-shadow: 0 0 10px #b45309;">Top Global 🌎</h2>
-                <div class="leaderboard" style="margin-bottom: 15px; width: 90%; max-width: 350px;">
-                    <ul id="main-leaderboard-ul" class="leaderboard-list">
-                        <span class="loading-text">Conectando con la base de datos...</span>
+            <div id="screen-ranking" class="overlay">
+                <h2 style="color: #fcd34d;">Top 10 Global 🌎</h2>
+                <div class="leaderboard">
+                    <ul id="list-ranking" class="leaderboard-list">
+                        <p style="color: #94a3b8;">Sincronizando...</p>
                     </ul>
                 </div>
-                <button class="btn btn-secondary" id="close-ranking-btn">Volver</button>
+                <button class="btn btn-secondary" id="btn-close-ranking">Volver</button>
+            </div>
+
+            <!-- Pantalla Selector -->
+            <div id="screen-levels" class="overlay">
+                <h2>Selecciona Nivel</h2>
+                <div id="level-select-grid"></div>
+                <button class="btn btn-secondary" id="btn-close-levels" style="margin-top: 20px;">Volver</button>
             </div>
 
             <!-- Pantalla Game Over -->
-            <div id="game-over-screen" class="overlay">
-                <h2>Game Over</h2>
-                <p style="margin-bottom: 5px;">Puntuación Final: <span id="final-score" style="color:#fcd34d; font-weight:bold; font-size:1.2rem;">0</span></p>
+            <div id="screen-gameover" class="overlay">
+                <h2 style="color: #fb7185;">FIN DEL JUEGO</h2>
+                <p>Puntuación: <span id="ui-final-score" style="color: #fcd34d;">0</span></p>
                 
-                <!-- Sección para registrar puntuación en Firebase -->
-                <div id="save-score-section" class="name-input-group" style="display: none;">
-                    <p style="font-size:0.9rem; margin-bottom:0;">¡Buena partida! Guarda tu récord:</p>
-                    <input type="text" id="player-name-input" class="name-input" placeholder="TU ALIAS" maxlength="8">
-                    <button class="btn" id="submit-score-btn" style="margin-top:0; padding:8px 20px; font-size:1rem;">Guardar Online</button>
-                    <p id="save-status-msg" style="font-size: 0.85rem; color: #4ade80; display: none; margin: 0;"></p>
+                <div id="save-area" style="display: none; flex-direction: column; align-items: center; width: 100%;">
+                    <p style="font-size: 0.8rem; margin-top: 10px;">¡Récord detectado! Introduce tu Alias:</p>
+                    <input type="text" id="input-alias" class="name-input" maxlength="10" placeholder="ANÓNIMO">
+                    <button class="btn" id="btn-submit-score" style="font-size: 0.9rem; padding: 10px;">Guardar en Ranking</button>
                 </div>
 
-                <div style="margin-top: 15px;">
-                    <button class="btn" id="restart-btn">Reintentar Nivel</button>
-                    <button class="btn btn-secondary" id="menu-btn">Menú Principal</button>
-                </div>
+                <button class="btn" id="btn-retry" style="margin-top: 20px;">Reintentar Nivel</button>
+                <button class="btn btn-secondary" id="btn-to-menu">Menú Principal</button>
             </div>
 
             <!-- Pantalla Pausa -->
-            <div id="pause-screen" class="overlay">
+            <div id="screen-pause" class="overlay">
                 <h2>PAUSA</h2>
-                <p>El juego está detenido</p>
-                <button class="btn" id="resume-btn">Reanudar</button>
-                <button class="btn btn-secondary" id="quit-to-menu-btn">Volver al Menú</button>
+                <button class="btn" id="btn-resume">Reanudar</button>
+                <button class="btn btn-secondary" id="btn-quit">Salir al Menú</button>
             </div>
 
             <!-- Pantalla Victoria -->
-            <div id="victory-screen" class="overlay">
-                <h2>¡Nivel Completado!</h2>
-                <p id="next-level-info">Preparando siguiente fase...</p>
-                <button class="btn" id="next-level-btn">Continuar</button>
+            <div id="screen-victory" class="overlay">
+                <h2 style="color: #34d399;">¡NIVEL SUPERADO!</h2>
+                <button class="btn" id="btn-next">Siguiente Nivel</button>
             </div>
             
-            <!-- Pantalla Fin del Juego -->
             <div id="game-beaten-screen" class="overlay">
-                <h2>¡HAS GANADO!</h2>
-                <p>¡Completaste los 100 niveles!</p>
-                <p>Puntuación Final: <span id="absolute-final-score">0</span></p>
-                <button class="btn" id="game-beaten-menu-btn">Menú Principal</button>
+                <h2>¡ERES UNA LEYENDA!</h2>
+                <p>Has completado los 100 niveles.</p>
+                <button class="btn" onclick="location.reload()">Reiniciar Todo</button>
             </div>
         </div>
-        
-        <p class="mobile-hint">Toca/Clic para lanzar la bola. Desliza para moverte.</p>
     </div>
 
-    <!-- Integración y lógica -->
     <script type="module">
-        // --- FIREBASE SETUP ---
+        // --- FIREBASE INTEGRATION ---
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, collection, addDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-        import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-analytics.js";
+        import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, addDoc, onSnapshot, query, limit } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        let app, auth, db, analytics, userSession;
-        const appId = 'laser-panic'; 
-        let globalHighScores = [];
+        const firebaseConfig = {
+            apiKey: "AIzaSyB-wS6DH6G-hF5eGvSFULIgX_gj7WE8WhI",
+            authDomain: "laser-panic.firebaseapp.com",
+            projectId: "laser-panic",
+            storageBucket: "laser-panic.firebasestorage.app",
+            messagingSenderId: "875382695348",
+            appId: "1:875382695348:web:ddd0691bf877c00848fee1",
+            measurementId: "G-HL25VP4G8N"
+        };
 
-        try {
-            const firebaseConfig = {
-                apiKey: "AIzaSyB-wS6DH6G-hF5eGvSFULIgX_gj7WE8WhI",
-                authDomain: "laser-panic.firebaseapp.com",
-                projectId: "laser-panic",
-                storageBucket: "laser-panic.firebasestorage.app",
-                messagingSenderId: "875382695348",
-                appId: "1:875382695348:web:bc653d6f1d8437bd48fee1",
-                measurementId: "G-QXTE2GT6GG"
-            };
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const appId = 'laser-panic';
+        let user = null;
+        let globalScores = [];
 
-            app = initializeApp(firebaseConfig);
-            analytics = getAnalytics(app);
-            auth = getAuth(app);
-            db = getFirestore(app);
-
-            const initAuth = async () => {
-                try {
-                    if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-                        try {
-                            await signInWithCustomToken(auth, __initial_auth_token);
-                        } catch(e) {
-                            await signInAnonymously(auth);
-                        }
-                    } else {
-                        await signInAnonymously(auth);
-                    }
-                } catch(err) {
-                    console.error("Error iniciando auth:", err);
-                }
-            };
-            initAuth();
-
-            onAuthStateChanged(auth, (u) => {
-                userSession = u;
-                if (userSession) {
-                    listenToGlobalLeaderboard();
-                }
-            });
-        } catch (e) {
-            console.error("Error init Firebase:", e);
-            document.getElementById('main-leaderboard-ul').innerHTML = '<span class="loading-text">Error conectando con la base de datos. Verifica tu Firebase.</span>';
-        }
-
-        function listenToGlobalLeaderboard() {
-            if (!userSession || !db) return;
-            const lbRef = collection(db, 'artifacts', appId, 'public', 'data', 'leaderboard');
-            
-            onSnapshot(lbRef, (snapshot) => {
-                let scores = [];
-                snapshot.forEach(doc => {
-                    scores.push({ id: doc.id, ...doc.data() });
+        // Auth & Ranking Listener
+        signInAnonymously(auth).catch(e => console.error("Firebase Auth Error", e));
+        onAuthStateChanged(auth, (u) => {
+            user = u;
+            if (user) {
+                const q = collection(db, 'artifacts', appId, 'public', 'data', 'leaderboard');
+                onSnapshot(q, (snapshot) => {
+                    let raw = [];
+                    snapshot.forEach(doc => raw.push(doc.data()));
+                    raw.sort((a, b) => b.score - a.score);
+                    globalScores = raw.slice(0, 10);
+                    updateRankingUI();
                 });
-                
-                scores.sort((a, b) => b.score - a.score);
-                globalHighScores = scores.slice(0, 10);
-                renderMainRanking();
-            }, (error) => {
-                console.error("Error fetching leaderboard:", error);
-            });
-        }
-
-        async function saveScoreToFirebase(playerName, finalScore) {
-            if (!userSession || !db) return false;
-            const lbRef = collection(db, 'artifacts', appId, 'public', 'data', 'leaderboard');
-            try {
-                await addDoc(lbRef, {
-                    name: playerName || "ANÓNIMO",
-                    score: finalScore,
-                    userId: userSession.uid,
-                    timestamp: Date.now()
-                });
-                return true;
-            } catch(e) {
-                console.error("Error saving score:", e);
-                return false;
             }
-        }
+        });
 
-        // --- SISTEMA DE SONIDOS SINTETIZADOS ---
-        const AudioContext = window.AudioContext || window.webkitAudioContext;
-        let audioCtx;
-
-        function initAudio() {
-            if (!audioCtx) {
-                audioCtx = new AudioContext();
-            } else if (audioCtx.state === 'suspended') {
-                audioCtx.resume();
-            }
-        }
-
-        function playSound(type) {
-            if (!audioCtx || isPaddleExploding) return;
-            if (audioCtx.state === 'suspended') audioCtx.resume();
-            
-            const osc = audioCtx.createOscillator();
-            const gainNode = audioCtx.createGain();
-            
-            osc.connect(gainNode);
-            gainNode.connect(audioCtx.destination);
-            
-            osc.type = 'sine';
-            
-            if (type === 'paddle') {
-                osc.frequency.setValueAtTime(350, audioCtx.currentTime);
-                gainNode.gain.setValueAtTime(0.5, audioCtx.currentTime);
-                gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
-                osc.start();
-                osc.stop(audioCtx.currentTime + 0.1);
-            } else if (type === 'brick') {
-                osc.frequency.setValueAtTime(700, audioCtx.currentTime);
-                gainNode.gain.setValueAtTime(0.3, audioCtx.currentTime);
-                gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
-                osc.start();
-                osc.stop(audioCtx.currentTime + 0.1);
-            }
-        }
-
-        document.addEventListener('click', initAudio, { once: true });
-        document.addEventListener('touchstart', initAudio, { once: true });
-
-
-        // --- CONFIGURACIÓN PRINCIPAL DEL JUEGO ---
+        // --- GAME ENGINE ---
         const canvas = document.getElementById('gameCanvas');
         const ctx = canvas.getContext('2d');
-        
         const GAME_WIDTH = 600;
         const GAME_HEIGHT = 800;
-        const PI2 = Math.PI * 2;
-        
-        function resizeCanvas() {
+
+        function resize() {
             const dpr = window.devicePixelRatio || 1;
             canvas.width = GAME_WIDTH * dpr;
             canvas.height = GAME_HEIGHT * dpr;
             ctx.scale(dpr, dpr);
         }
-        resizeCanvas();
-        window.addEventListener('resize', resizeCanvas);
+        resize();
+        window.addEventListener('resize', resize);
 
-        // --- SISTEMA DE MUNDOS Y FONDOS ---
+        // Mundos
         const worldThemes = [
-            { id: 1, name: "Espacio Profundo", grad: "radial-gradient(circle at 50% 0%, #1e293b 0%, #000000 100%)", starColor: "255, 255, 255", textColor: "#e2e8f0", textShadow: "0 0 8px #94a3b8" }, 
-            { id: 2, name: "Nebulosa Solar", grad: "radial-gradient(circle at 50% 0%, #4c1d95 0%, #000000 100%)", starColor: "233, 213, 255", textColor: "#d8b4fe", textShadow: "0 0 10px #c084fc, 0 0 20px #9333ea" }, 
-            { id: 3, name: "Ciber Matriz", grad: "radial-gradient(circle at 50% 0%, #064e3b 0%, #000000 100%)", starColor: "167, 243, 208", textColor: "#6ee7b7", textShadow: "0 0 5px #10b981, 0 0 15px #047857" }, 
-            { id: 4, name: "Núcleo Volcánico", grad: "radial-gradient(circle at 50% 0%, #7f1d1d 0%, #000000 100%)", starColor: "fca5a5", textColor: "#fca5a5", textShadow: "0 0 10px #ef4444, 0 0 20px #b91c1c" }, 
-            { id: 5, name: "Abismo Oceánico", grad: "radial-gradient(circle at 50% 0%, #164e63 0%, #000000 100%)", starColor: "165, 243, 252", textColor: "#67e8f9", textShadow: "0 0 10px #06b6d4, 0 0 20px #0369a1" }, 
-            { id: 6, name: "Desierto Carmesí", grad: "radial-gradient(circle at 50% 0%, #7c2d12 0%, #2e1065 100%)", starColor: "fdba74", textColor: "#fdba74", textShadow: "0 0 8px #f97316, 0 0 15px #c2410c" }, 
-            { id: 7, name: "Tundra Helada", grad: "radial-gradient(circle at 50% 0%, #0c4a6e 0%, #082f49 100%)", starColor: "bae6fd", textColor: "#bae6fd", textShadow: "0 0 10px #38bdf8, 0 0 20px #0284c7" }, 
-            { id: 8, name: "Zona Tóxica", grad: "radial-gradient(circle at 50% 0%, #3f6212 0%, #000000 100%)", starColor: "d9f99d", textColor: "#bef264", textShadow: "0 0 10px #84cc16, 0 0 20px #4d7c0f" }, 
-            { id: 9, name: "Galaxia Dorada", grad: "radial-gradient(circle at 50% 0%, #713f12 0%, #000000 100%)", starColor: "fef08a", textColor: "#fde047", textShadow: "0 0 10px #eab308, 0 0 20px #a16207" }, 
-            { id: 10, name: "El Vacío Final", grad: "radial-gradient(circle at 50% 0%, #000000 0%, #000000 100%)", starColor: "255, 0, 0", textColor: "#f87171", textShadow: "0 0 10px #dc2626, 0 0 25px #7f1d1d, 0 0 5px #000" } 
+            { name: "Espacio Profundo", grad: "#1e293b", star: "white", text: "#38bdf8" },
+            { name: "Nebulosa Solar", grad: "#4c1d95", star: "#d8b4fe", text: "#d8b4fe" },
+            { name: "Ciber Matriz", grad: "#064e3b", star: "#6ee7b7", text: "#6ee7b7" },
+            { name: "Núcleo Volcánico", grad: "#7f1d1d", star: "#fca5a5", text: "#f87171" },
+            { name: "Abismo Oceánico", grad: "#164e63", star: "#67e8f9", text: "#22d3ee" },
+            { name: "Desierto Carmesí", grad: "#7c2d12", star: "#fdba74", text: "#fb923c" },
+            { name: "Tundra Helada", grad: "#0c4a6e", star: "#bae6fd", text: "#7dd3fc" },
+            { name: "Zona Tóxica", grad: "#3f6212", star: "#d9f99d", text: "#a3e635" },
+            { name: "Galaxia Dorada", grad: "#713f12", star: "#fef08a", text: "#facc15" },
+            { name: "El Vacío Final", grad: "#000000", star: "red", text: "#fca5a5" }
         ];
 
-        const ui = {
-            score: document.getElementById('score-display'),
-            lives: document.getElementById('lives-display'),
-            worldLvl: document.getElementById('world-level-display'),
-            start: document.getElementById('start-screen'),
-            levelSelect: document.getElementById('level-select-screen'),
-            ranking: document.getElementById('ranking-screen'),
-            gameOver: document.getElementById('game-over-screen'),
-            pause: document.getElementById('pause-screen'),
-            victory: document.getElementById('victory-screen'),
-            beaten: document.getElementById('game-beaten-screen'),
-            powersHud: document.getElementById('active-powers-hud'),
-            continueInfo: document.getElementById('continue-info'),
-            wrapper: document.getElementById('canvas-wrapper'),
-            mainLeaderboardUl: document.getElementById('main-leaderboard-ul'),
-            fScore: document.getElementById('final-score'),
-            saveScoreSec: document.getElementById('save-score-section'),
-            playerNameInput: document.getElementById('player-name-input'),
-            submitScoreBtn: document.getElementById('submit-score-btn'),
-            saveStatusMsg: document.getElementById('save-status-msg')
-        };
+        // Estado
+        let level = parseInt(localStorage.getItem('laserPanicLvl')) || 1;
+        let maxLvl = parseInt(localStorage.getItem('laserPanicMax')) || 1;
+        let score = 0, lastRenderedScore = -1, lives = 3, isPlaying = false, isExploding = false;
+        let balls = [], bricks = [], drops = [], bullets = [], stars = [], particles = [];
 
-        // --- SISTEMA DE GUARDADO LOCAL ---
-        let maxLevelUnlocked = parseInt(localStorage.getItem('laserPanicMaxLevel')) || 1;
-        let level = maxLevelUnlocked; 
-        const maxLevels = 100;
-
-        function saveProgress(newLevel) {
-            if (newLevel > maxLevelUnlocked && newLevel <= maxLevels) {
-                maxLevelUnlocked = newLevel;
-                localStorage.setItem('laserPanicMaxLevel', maxLevelUnlocked);
-            }
-        }
-
-        function renderMainRanking() {
-            ui.mainLeaderboardUl.innerHTML = '';
-            if (globalHighScores.length === 0) {
-                ui.mainLeaderboardUl.innerHTML = '<span class="loading-text">No hay puntuaciones aún. ¡Sé el primero!</span>';
-                return;
-            }
-            
-            globalHighScores.forEach((entry, index) => {
-                const li = document.createElement('li');
-                if (userSession && entry.userId === userSession.uid) li.className = 'new-high-score';
-                li.innerHTML = `<span>${index + 1}. ${entry.name}</span> <span>${entry.score}</span>`;
-                ui.mainLeaderboardUl.appendChild(li);
+        // OPTIMIZACIÓN: Las estrellas ahora tienen una 'fase' aleatoria fija para no usar Math.random() cada frame
+        for(let i=0; i<80; i++) {
+            stars.push({ 
+                x: Math.random()*GAME_WIDTH, y: Math.random()*GAME_HEIGHT, 
+                sp: Math.random()*1.5+0.5, sz: Math.random()*2+0.5,
+                opacity: Math.random(), phase: Math.random() * Math.PI * 2
             });
         }
 
-        // --- ESTADO DEL JUEGO ---
-        let animationId;
-        let isPlaying = false;
-        let score = 0;
-        let lives = 3;
-        
-        const PADDLE_BASE_WIDTH = 120;
-        const paddle = {
-            width: PADDLE_BASE_WIDTH, height: 18,
-            x: GAME_WIDTH / 2 - PADDLE_BASE_WIDTH/2, y: GAME_HEIGHT - 40,
-            speed: 15, dx: 0,
-            color: '#38bdf8'
+        const effects = {
+            fire: { t:0, max:900, c:'#f97316', label:'🔥 FUEGO' },
+            poison: { t:0, max:600, c:'#22c55e', label:'☠️ VENENO' },
+            slow: { t:0, max:600, c:'#7dd3fc', label:'🐢 LENTO' },
+            fast: { t:0, max:420, c:'#fef08a', label:'⚡ RÁPIDO' },
+            expand: { t:0, max:900, c:'#34d399', label:'↔️ GRANDE' },
+            shrink: { t:0, max:420, c:'#ef4444', label:'>< PEQUEÑO' },
+            gun: { t:0, max:900, c:'#a855f7', label:'🔫 PISTOLAS' },
+            magnet: { t:0, max:1500, c:'#f43f5e', label:'🧲 IMÁN' }
         };
 
-        let balls = [], bricks = [], drops = [], bullets = [], stars = [], paddleParticles = [];
-        let isPaddleExploding = false;
-        let explosionTimeout = null;
-        let currentStarColor = "255, 255, 255";
+        const paddle = { x:GAME_WIDTH/2 - 60, y:GAME_HEIGHT-40, w:120, h:18, dx:0 };
 
-        for(let i = 0; i < 70; i++) {
-            stars.push({
-                x: Math.random() * GAME_WIDTH, y: Math.random() * GAME_HEIGHT,
-                speed: Math.random() * 1.5 + 0.2, size: Math.random() * 2 + 0.5, opacity: Math.random()
-            });
-        }
-
-        let effects = {
-            fireball: { timer: 0, max: 900, color: '#f97316', label: '🔥 FUEGO' }, 
-            poison: { timer: 0, max: 600, color: '#22c55e', label: '☠️ VENENO' },  
-            slow: { timer: 0, max: 600, color: '#7dd3fc', label: '🐢 LENTO' },      
-            fast: { timer: 0, max: 420, color: '#fef08a', label: '⚡ RÁPIDO' },    
-            expand: { timer: 0, max: 900, color: '#34d399', label: '↔️ GRANDE' },   
-            shrink: { timer: 0, max: 420, color: '#ef4444', label: '>< PEQUEÑO' },  
-            gun: { timer: 0, max: 900, color: '#a855f7', label: '🔫 PISTOLAS' },      
-            magnet: { timer: 0, max: 1500, color: '#f43f5e', label: '🧲 IMÁN' }     
-        };
-
-        const powerUpTypes = {
-            'multiball': { symbol: 'x5', color: '#38bdf8', textC: '#fff' },
-            'fireball': { symbol: '🔥', color: '#f97316', textC: '#fff' },
-            'slow': { symbol: '🐢', color: '#7dd3fc', textC: '#000' },
-            'fast': { symbol: '⚡', color: '#fef08a', textC: '#000' },
-            'poison': { symbol: '☠️', color: '#22c55e', textC: '#fff' },
-            'expand': { symbol: '↔️', color: '#34d399', textC: '#000' },
-            'shrink': { symbol: '><', color: '#ef4444', textC: '#fff' },
-            'life': { symbol: '1UP', color: '#ec4899', textC: '#fff' },
-            'gun': { symbol: '🔫', color: '#a855f7', textC: '#fff' },
-            'magnet': { symbol: '🧲', color: '#f43f5e', textC: '#fff' }
-        };
-
-        // --- MUNDO/UI ---
-        function updateWorldTheme() {
-            let worldIndex = Math.floor((level - 1) / 10);
-            if (worldIndex > 9) worldIndex = 9;
-            let theme = worldThemes[worldIndex];
-            
-            ui.wrapper.style.background = theme.grad;
-            currentStarColor = theme.starColor;
-            
-            ui.worldLvl.style.color = theme.textColor;
-            ui.worldLvl.style.textShadow = `1px 1px 2px #000, -1px -1px 2px #000, 1px -1px 2px #000, -1px 1px 2px #000, ${theme.textShadow}`;
-            
-            let lvlInWorld = ((level - 1) % 10) + 1;
-            ui.worldLvl.innerText = `MUNDO ${worldIndex + 1} - NIVEL ${lvlInWorld}`;
-            ui.continueInfo.innerText = `Progreso guardado: Nivel ${maxLevelUnlocked}`;
-        }
-
-        function buildLevelSelector() {
-            const container = document.getElementById('level-select-container');
-            container.innerHTML = '';
-            for(let w = 0; w < 10; w++) {
-                const section = document.createElement('div');
-                section.className = 'world-section';
-                const title = document.createElement('h3');
-                title.className = 'world-title';
-                title.innerText = `Mundo ${w+1}: ${worldThemes[w].name}`;
-                title.style.color = worldThemes[w].textColor;
-                title.style.textShadow = worldThemes[w].textShadow;
-                section.appendChild(title);
-
-                const grid = document.createElement('div');
-                grid.className = 'level-grid';
-                for(let l = 1; l <= 10; l++) {
-                    const levelNum = (w * 10) + l;
-                    const btn = document.createElement('button');
-                    btn.className = 'level-btn';
-                    btn.innerText = levelNum;
-                    
-                    if(levelNum <= maxLevelUnlocked) {
-                        btn.onclick = () => { level = levelNum; ui.levelSelect.classList.remove('active'); startGame(); };
-                    } else {
-                        btn.classList.add('locked'); btn.disabled = true;
-                    }
-                    grid.appendChild(btn);
-                }
-                section.appendChild(grid); container.appendChild(section);
-            }
-        }
-
-        // --- BOTONES ---
-        document.getElementById('start-btn').addEventListener('click', () => { level = maxLevelUnlocked; startGame(); });
-        document.getElementById('open-level-select-btn').addEventListener('click', () => { buildLevelSelector(); ui.start.classList.remove('active'); ui.levelSelect.classList.add('active'); });
-        document.getElementById('close-level-select-btn').addEventListener('click', () => { ui.levelSelect.classList.remove('active'); ui.start.classList.add('active'); });
-        document.getElementById('open-ranking-btn').addEventListener('click', () => { renderMainRanking(); ui.start.classList.remove('active'); ui.ranking.classList.add('active'); });
-        document.getElementById('close-ranking-btn').addEventListener('click', () => { ui.ranking.classList.remove('active'); ui.start.classList.add('active'); });
-        document.getElementById('restart-btn').addEventListener('click', retryLevel);
-        document.getElementById('menu-btn').addEventListener('click', () => { ui.gameOver.classList.remove('active'); updateWorldTheme(); ui.start.classList.add('active'); });
-        document.getElementById('game-beaten-menu-btn').addEventListener('click', () => { location.reload(); });
-
-        ui.submitScoreBtn.addEventListener('click', async () => {
-            const alias = ui.playerNameInput.value.trim().toUpperCase();
-            if(!alias) return;
-            ui.submitScoreBtn.disabled = true; ui.submitScoreBtn.innerText = "Guardando...";
-            const success = await saveScoreToFirebase(alias, score);
-            ui.submitScoreBtn.style.display = 'none'; ui.playerNameInput.style.display = 'none'; ui.saveStatusMsg.style.display = 'block';
-            if (success) { ui.saveStatusMsg.innerText = "¡Puntuación guardada!"; ui.saveStatusMsg.style.color = "#4ade80"; } 
-            else { ui.saveStatusMsg.innerText = "Error de conexión."; ui.saveStatusMsg.style.color = "#ef4444"; }
-        });
-
-        document.getElementById('pause-game-btn').addEventListener('click', () => {
-            if (isPlaying && !isPaddleExploding) { isPlaying = false; cancelAnimationFrame(animationId); ui.pause.classList.add('active'); }
-        });
-        document.getElementById('resume-btn').addEventListener('click', () => { ui.pause.classList.remove('active'); isPlaying = true; update(); });
-        document.getElementById('quit-to-menu-btn').addEventListener('click', () => {
-            ui.pause.classList.remove('active'); isPaddleExploding = false; paddle.width = PADDLE_BASE_WIDTH; resetAllEffects(); updateWorldTheme(); ui.start.classList.add('active');
-        });
-        document.getElementById('next-level-btn').addEventListener('click', nextLevel);
-
-        // --- OPTIMIZACIÓN DE DIBUJO ---
-        function drawBackground() {
-            ctx.clearRect(0, 0, GAME_WIDTH, GAME_HEIGHT);
-            stars.forEach(s => {
-                s.y += s.speed; if(s.y > GAME_HEIGHT) { s.y = 0; s.x = Math.random() * GAME_WIDTH; }
-                let currentOpacity = Math.max(0.1, Math.min(1, s.opacity + (Math.sin(Date.now() / 500 * s.speed) * 0.3)));
-                ctx.fillStyle = `rgba(${currentStarColor}, ${currentOpacity})`;
-                ctx.fillRect(s.x, s.y, s.size * 2, s.size * 2);
-            });
-        }
-
-        function createBricks(levelNum) {
+        function setupLevel() {
             bricks = [];
-            const cols = 9;
-            const rows = Math.min(4 + Math.floor(levelNum / 8), 12); 
-            const padding = 6;
-            const w = (GAME_WIDTH - (padding * (cols + 1))) / cols;
-            const h = 28;
-            const offsetY = 70;
-            const levelBaseHue = Math.floor(Math.random() * 360);
-
-            for (let r = 0; r < rows; r++) {
-                bricks[r] = [];
-                for (let c = 0; c < cols; c++) {
-                    let create = false;
-                    if (levelNum % 5 === 0) create = (r + c) % 2 === 0; 
-                    else if (levelNum % 4 === 0) create = r % 2 === 0 || c % 2 === 0; 
-                    else if (levelNum % 3 === 0) create = c > r && c < cols - r; 
-                    else if (levelNum % 2 === 0) create = c === 0 || c === cols-1 || r === 0 || r === rows-1; 
-                    else create = Math.random() > 0.25; 
-
-                    if (r === 0) create = true;
-
-                    if (create) {
-                        let hp = 1;
-                        if (Math.random() > 0.4) hp = Math.floor(Math.random() * Math.min(Math.floor(levelNum / 10) + 2, 9)) + 1;
-
-                        let pUp = null;
-                        if (Math.random() > 0.85) {
-                            const keys = Object.keys(powerUpTypes);
-                            keys.push('life', 'life', 'life', 'life'); 
-                            pUp = keys[Math.floor(Math.random() * keys.length)];
-                            hp = 1;
-                        }
-
-                        const colHue = (levelBaseHue + (c * (360 / cols))) % 360;
-                        bricks[r].push({
-                            x: padding + (c * (w + padding)), y: offsetY + (r * (h + padding)),
-                            w: w, h: h, hp: hp, maxHp: hp, powerUp: pUp,
-                            poisoned: false, poisonTimer: 0, color: `hsl(${colHue}, 80%, 60%)`
-                        });
-                    } else {
-                        bricks[r].push(null);
-                    }
-                }
-            }
-        }
-
-        function createBall() {
-            return {
-                x: paddle.x + paddle.width / 2, y: paddle.y - 12, radius: 10,
-                speed: 11 + (level * 0.15), dx: 0, dy: 0, active: false, history: [], attached: false, attachOffset: 0
-            };
-        }
-
-        function resetBalls() {
-            balls = [createBall()];
-            balls[0].attached = true;
-            balls[0].attachOffset = paddle.width / 2;
-        }
-
-        function launchBall() {
-            if (isPlaying && !isPaddleExploding && balls.length > 0) {
-                balls.forEach(b => {
-                    if (b.attached) {
-                        b.attached = false;
-                        let hitPoint = (b.attachOffset - (paddle.width / 2)) / (paddle.width / 2);
-                        let startAngle = hitPoint * (Math.PI / 2.5); 
-                        if (Math.abs(startAngle) < 0.1) startAngle = (Math.random() * 0.4) - 0.2;
-                        if (startAngle > Math.PI/3) startAngle = Math.PI/3;
-                        if (startAngle < -Math.PI/3) startAngle = -Math.PI/3;
-                        b.dx = b.speed * Math.sin(startAngle);
-                        b.dy = -b.speed * Math.cos(startAngle);
-                        b.active = true;
-                        playSound('paddle');
-                    }
-                });
-            }
-        }
-
-        function shoot() {
-            if (effects.gun.timer > 0 && isPlaying && !isPaddleExploding) {
-                bullets.push({ x: paddle.x + 18, y: paddle.y - 10, w: 4, h: 12, speed: 12, color: '#fcd34d', history: [] });
-                bullets.push({ x: paddle.x + paddle.width - 18, y: paddle.y - 10, w: 4, h: 12, speed: 12, color: '#fcd34d', history: [] });
-            }
-        }
-
-        function drawBullets() {
-            bullets.forEach(b => {
-                b.history.forEach((pos, idx) => {
-                    let opacity = idx / b.history.length;
-                    ctx.fillStyle = `rgba(252, 211, 77, ${opacity * 0.5})`;
-                    ctx.fillRect(pos.x - b.w/2, pos.y, b.w, b.h);
-                });
-                ctx.fillStyle = b.color;
-                ctx.fillRect(b.x - b.w/2, b.y, b.w, b.h);
-            });
-        }
-
-        function updateBullets() {
-            for (let i = bullets.length - 1; i >= 0; i--) {
-                let b = bullets[i];
-                b.history.push({x: b.x, y: b.y});
-                if(b.history.length > 5) b.history.shift();
-                b.y -= b.speed;
-                if (b.y < 0) { bullets.splice(i, 1); continue; }
-
-                let hit = false;
-                for (let r = 0; r < bricks.length; r++) {
-                    for (let c = 0; c < bricks[r].length; c++) {
-                        let brick = bricks[r][c];
-                        if (brick && brick.hp > 0) {
-                            if (b.x > brick.x && b.x < brick.x + brick.w && b.y > brick.y && b.y < brick.y + brick.h) {
-                                brick.hp -= 1; score += 10; ui.score.innerText = score; playSound('brick');
-                                if (brick.hp <= 0 && brick.powerUp) drops.push({ x: brick.x + brick.w/2 - 22.5, y: brick.y + brick.h, w: 45, h: 30, type: brick.powerUp, speed: 3 });
-                                hit = true; break;
-                            }
-                        }
-                    }
-                    if (hit) break;
-                }
-                if (hit) bullets.splice(i, 1);
-            }
-        }
-
-        function drawPaddle() {
-            if (isPaddleExploding) return; 
-            let pColor = effects.expand.timer > 0 ? '#34d399' : (effects.shrink.timer > 0 ? '#ef4444' : paddle.color);
+            const rows = Math.min(4 + Math.floor(level/8), 12);
+            const cols = 9, pad = 6;
+            const w = (GAME_WIDTH - (pad*(cols+1)))/cols, h = 28, offY = 80;
             
-            ctx.fillStyle = pColor;
-            ctx.fillRect(paddle.x + 10, paddle.y, paddle.width - 20, paddle.height);
-            ctx.fillRect(paddle.x, paddle.y + 5, paddle.width, paddle.height - 5);
-            ctx.fillStyle = '#ffffff';
-            ctx.fillRect(paddle.x + paddle.width/2 - 20, paddle.y + 4, 40, paddle.height - 8);
-
-            if (effects.gun.timer > 0) {
-                ctx.fillStyle = '#a855f7'; ctx.fillRect(paddle.x + 15, paddle.y - 12, 6, 16); ctx.fillRect(paddle.x + paddle.width - 21, paddle.y - 12, 6, 16);
-                ctx.fillStyle = '#ffffff'; ctx.fillRect(paddle.x + 16, paddle.y - 14, 4, 4); ctx.fillRect(paddle.x + paddle.width - 20, paddle.y - 14, 4, 4);
+            for(let r=0; r<rows; r++) {
+                bricks[r] = [];
+                for(let c=0; c<cols; c++) {
+                    if(r === 0 || Math.random() > 0.3) {
+                        let hp = 1; if(Math.random()>0.5) hp = Math.floor(Math.random() * Math.min(Math.floor(level/10)+2, 9)) + 1;
+                        let p = null; if(Math.random()>0.88) { let ks = Object.keys(effects); ks.push('life','life','life','life'); p = ks[Math.floor(Math.random()*ks.length)]; }
+                        bricks[r].push({ x:pad+(c*(w+pad)), y:offY+(r*(h+pad)), w, h, hp, p, color:`hsl(${Math.random()*360}, 75%, 60%)`, poisoned:false });
+                    } else bricks[r].push(null);
+                }
             }
-            if (effects.magnet.timer > 0) {
-                ctx.strokeStyle = '#f43f5e'; ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(paddle.x + 10, paddle.y); ctx.lineTo(paddle.x + paddle.width - 10, paddle.y); ctx.stroke();
-            }
+            balls = [{ x:0, y:0, r:10, dx:0, dy:0, attached:true, off:60, history:[] }];
+            isExploding = false;
+            particles = [];
+            updateUI();
         }
 
-        function drawBalls() {
-            let baseColor = '#ffffff';
-            if (effects.fireball.timer > 0) baseColor = '#ffed4a';
-            else if (effects.poison.timer > 0) baseColor = '#bbf7d0';
-
-            balls.forEach(ball => {
-                if (!ball.attached) {
-                    for (let i = 0; i < ball.history.length; i++) {
-                        let pt = ball.history[i];
-                        let opacity = 1 - (i / ball.history.length);
-                        ctx.fillStyle = `rgba(255, 255, 255, ${opacity * 0.3})`;
-                        // Renderizado de estela ultrarrápido (cuadrados en vez de arcos)
-                        let size = ball.radius * 1.6 * opacity;
-                        ctx.fillRect(pt.x - size/2, pt.y - size/2, size, size);
-                    }
-                }
-                ctx.beginPath(); ctx.arc(ball.x, ball.y, ball.radius, 0, PI2); ctx.fillStyle = baseColor; ctx.fill();
-
-                if (ball.attached && isPlaying) {
-                    ctx.fillStyle = 'rgba(255, 255, 255, 0.7)'; ctx.font = '16px Arial'; ctx.textAlign = 'center'; ctx.fillText("Toca para lanzar", GAME_WIDTH / 2, paddle.y - 40);
-                }
+        function update() {
+            if(!isPlaying) return;
+            // OPTIMIZACIÓN: Variables puras para acelerar
+            const now = Date.now();
+            
+            ctx.fillStyle = '#020617';
+            ctx.fillRect(0,0,GAME_WIDTH,GAME_HEIGHT);
+            
+            // Fondo Parallax - Sin Math.random() en el bucle
+            let theme = worldThemes[Math.min(Math.floor((level-1)/10), 9)];
+            stars.forEach(s => {
+                s.y += s.sp; if(s.y > GAME_HEIGHT) s.y = 0;
+                let currentOpacity = Math.max(0.1, Math.min(1, s.opacity + (Math.sin((now / 500 * s.speed) + s.phase) * 0.3)));
+                ctx.fillStyle = `rgba(255,255,255, ${currentOpacity})`; 
+                ctx.fillRect(s.x | 0, s.y | 0, (s.sz*2) | 0, (s.sz*2) | 0); // Renderizado entero veloz
             });
-        }
 
-        function drawBricks() {
-            ctx.textAlign = 'center';
-            ctx.textBaseline = 'middle';
+            // Dibujar Bloques
+            let activeBricks = 0;
+            bricks.forEach(row => row.forEach(b => {
+                if(b && b.hp > 0) {
+                    activeBricks++;
+                    ctx.fillStyle = b.poisoned && (Math.floor(now/100)%2===0) ? '#4ade80' : b.color;
+                    
+                    // OPTIMIZACIÓN: Convertimos posiciones a enteros usando "| 0" para evitar el costoso antialiasing de subpíxeles
+                    ctx.fillRect(b.x | 0, b.y | 0, b.w | 0, b.h | 0); 
+                    ctx.fillStyle = 'rgba(255,255,255,0.2)'; 
+                    ctx.fillRect((b.x+2) | 0, (b.y+2) | 0, (b.w-4) | 0, (b.h*0.4) | 0);
+                    
+                    ctx.fillStyle = 'white'; ctx.font = 'bold 14px Arial'; ctx.textAlign = 'center';
+                    if(b.p) ctx.fillText('★', (b.x+b.w/2)|0, (b.y+b.h/2+6)|0); else if(b.hp>1) ctx.fillText(b.hp, (b.x+b.w/2)|0, (b.y+b.h/2+6)|0);
+                    if(b.poisoned && Math.floor(now%1000) < 20) { b.hp -= 0.05; score += 1; }
+                }
+            }));
 
-            for (let r = 0; r < bricks.length; r++) {
-                for (let c = 0; c < bricks[r].length; c++) {
-                    let b = bricks[r][c];
-                    if (b && b.hp > 0) {
-                        ctx.fillStyle = b.poisoned && (Math.floor(Date.now() / 100) % 2 === 0) ? '#4ade80' : b.color;
-                        ctx.fillRect(b.x, b.y, b.w, b.h);
-                        
-                        ctx.fillStyle = 'rgba(255, 255, 255, 0.2)';
-                        ctx.fillRect(b.x + 2, b.y + 2, b.w - 4, b.h * 0.4);
+            // Dibujar Drops
+            drops.forEach((d,i) => {
+                d.y += 1.5; ctx.fillStyle = d.p === 'life' ? '#ec4899' : (effects[d.p]?.c || '#fff');
+                ctx.fillRect(d.x | 0, d.y | 0, 35, 20); // Bloque sólido
+                if(!isExploding && d.y < paddle.y+paddle.h && d.y+20 > paddle.y && d.x < paddle.x+paddle.w && d.x+35 > paddle.x) {
+                    if(d.p==='life') { lives++; document.getElementById('ui-lives').innerText=lives; }
+                    else if(d.p==='multiball') { for(let j=0; j<3; j++) balls.push({ x:paddle.x+paddle.w/2, y:paddle.y-15, r:10, dx:(Math.random()-0.5)*10, dy:-6, attached:false, history:[] }); }
+                    else if(effects[d.p]) effects[d.p].t = effects[d.p].max;
+                    drops.splice(i,1); score += 50;
+                } else if(d.y > GAME_HEIGHT) drops.splice(i,1);
+            });
 
-                        ctx.strokeStyle = 'rgba(0,0,0,0.4)';
-                        ctx.lineWidth = 1;
-                        ctx.strokeRect(b.x, b.y, b.w, b.h);
-
-                        if (b.powerUp) {
-                            ctx.fillStyle = '#ffffff'; ctx.font = '22px Arial'; 
-                            ctx.fillText('★', b.x + b.w / 2, b.y + b.h / 2 + 2); 
-                        } else if (b.hp > 1) {
-                            ctx.font = 'bold 16px Arial';
-                            ctx.fillStyle = 'rgba(0,0,0,0.6)'; ctx.fillText(b.hp, b.x + b.w / 2 + 1, b.y + b.h / 2 + 1);
-                            ctx.fillStyle = '#ffffff'; ctx.fillText(b.hp, b.x + b.w / 2, b.y + b.h / 2);
+            if(isExploding) {
+                particles.forEach((p,i) => {
+                    p.x+=p.vx; p.y+=p.vy; p.vy+=0.4; p.life-=0.02;
+                    if(p.life<=0) particles.splice(i,1);
+                    else { ctx.globalAlpha=p.life; ctx.fillStyle=p.c; ctx.fillRect(p.x | 0, p.y | 0, p.s | 0, p.s | 0); }
+                });
+                ctx.globalAlpha=1;
+            } else {
+                // Balas
+                bullets.forEach((b,i) => {
+                    b.y -= 10; ctx.fillStyle = '#fcd34d'; ctx.fillRect((b.x-2)|0, b.y|0, 4, 12);
+                    if(b.y < 0) bullets.splice(i,1);
+                    else bricks.forEach(row => row.forEach(br => {
+                        if(br && br.hp>0 && b.x > br.x && b.x < br.x+br.w && b.y > br.y && b.y < br.y+br.h) {
+                            br.hp--; score += 10; bullets.splice(i,1);
+                            if(br.hp<=0 && br.p) drops.push({x:br.x+br.w/2-17, y:br.y, p:br.p});
                         }
-                    }
-                }
-            }
-        }
+                    }));
+                });
 
-        function drawDrops() {
-            ctx.textAlign = 'center';
-            ctx.textBaseline = 'middle';
-            ctx.font = 'bold 16px Arial';
-
-            drops.forEach(drop => {
-                let info = powerUpTypes[drop.type];
-                ctx.fillStyle = info.color;
-                ctx.fillRect(drop.x, drop.y, drop.w, drop.h);
-                ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
-                ctx.fillRect(drop.x + 2, drop.y + 2, drop.w - 4, drop.h * 0.4);
-                ctx.fillStyle = info.textC;
-                ctx.fillText(info.symbol, drop.x + drop.w/2, drop.y + drop.h/2 + 2);
-            });
-        }
-
-        function renderHUD() {
-            ui.powersHud.innerHTML = ''; 
-            for (const key in effects) {
-                const eff = effects[key];
-                if (eff.timer > 0) {
-                    const percentage = (eff.timer / eff.max) * 100;
-                    const container = document.createElement('div'); container.className = 'power-bar-container';
-                    const fill = document.createElement('div'); fill.className = 'power-bar-fill'; fill.style.backgroundColor = eff.color; fill.style.transform = `scaleX(${percentage / 100})`;
-                    const text = document.createElement('div'); text.className = 'power-bar-text'; text.innerText = eff.label;
-                    container.appendChild(fill); container.appendChild(text); ui.powersHud.appendChild(container);
-                }
-            }
-        }
-
-        function movePaddle() {
-            if (isPaddleExploding) return; 
-            let targetWidth = effects.expand.timer > 0 ? PADDLE_BASE_WIDTH * 1.6 : (effects.shrink.timer > 0 ? PADDLE_BASE_WIDTH * 0.5 : PADDLE_BASE_WIDTH);
-            paddle.width += (targetWidth - paddle.width) * 0.1;
-            paddle.x += paddle.dx;
-            if (paddle.x < 0) paddle.x = 0;
-            if (paddle.x + paddle.width > GAME_WIDTH) paddle.x = GAME_WIDTH - paddle.width;
-
-            balls.forEach(b => { if (b.attached) { b.x = paddle.x + b.attachOffset; b.y = paddle.y - b.radius - 2; } });
-        }
-
-        function updateDrops() {
-            for (let i = drops.length - 1; i >= 0; i--) {
-                let d = drops[i]; d.y += d.speed;
-                if (!isPaddleExploding && d.y + d.h > paddle.y && d.y < paddle.y + paddle.height && d.x + d.w > paddle.x && d.x < paddle.x + paddle.width) {
-                    activatePowerUp(d.type); drops.splice(i, 1);
-                } else if (d.y > GAME_HEIGHT) { drops.splice(i, 1); }
-            }
-        }
-
-        function updateEffects() {
-            let hasChanges = false;
-            for (const key in effects) { if (effects[key].timer > 0) { effects[key].timer--; hasChanges = true; } }
-            if (hasChanges) renderHUD();
-            return effects.fast.timer > 0 ? 1.5 : (effects.slow.timer > 0 ? 0.6 : 1);
-        }
-
-        function activatePowerUp(type) {
-            score += 50; ui.score.innerText = score;
-            if (type === 'multiball') {
-                if (balls.length === 0) return;
-                let baseBall = balls.find(b => !b.attached) || balls[0];
-                for (let i = 0; i < 4; i++) {
-                    let newDx = baseBall.speed * (Math.random() * 0.8 + 0.2) * (Math.random() > 0.5 ? 1 : -1);
-                    let newDy = -Math.abs(baseBall.speed * (Math.random() * 0.5 + 0.5));
-                    let isAttached = false, attachOff = 0;
-                    if (baseBall.attached) { isAttached = true; attachOff = Math.random() * paddle.width; }
-                    balls.push({ x: isAttached ? paddle.x + attachOff : baseBall.x, y: isAttached ? paddle.y - baseBall.radius - 2 : baseBall.y, radius: baseBall.radius, speed: baseBall.speed, dx: newDx, dy: newDy, active: !isAttached, history: [], attached: isAttached, attachOffset: attachOff });
-                }
-            } else if (type === 'life') { lives++; ui.lives.innerText = lives; }
-            else {
-                if (type === 'slow') effects.fast.timer = 0;
-                else if (type === 'fast') effects.slow.timer = 0;
-                else if (type === 'expand') effects.shrink.timer = 0;
-                else if (type === 'shrink') effects.expand.timer = 0;
+                // Raqueta
+                let targetW = effects.expand.t > 0 ? 200 : (effects.shrink.t > 0 ? 70 : 120);
+                paddle.w += (targetW - paddle.w) * 0.1;
+                paddle.x += paddle.dx; if(paddle.x < 0) paddle.x = 0; if(paddle.x+paddle.w > GAME_WIDTH) paddle.x = GAME_WIDTH-paddle.w;
                 
-                if (effects[type]) effects[type].timer = effects[type].max;
-            }
-            renderHUD();
-        }
+                let pCol = effects.expand.t > 0 ? '#34d399' : (effects.shrink.t > 0 ? '#ef4444' : '#38bdf8');
+                ctx.fillStyle = pCol;
+                ctx.fillRect(paddle.x | 0, paddle.y | 0, paddle.w | 0, paddle.h | 0);
+                ctx.fillStyle = '#fff';
+                ctx.fillRect((paddle.x+10) | 0, (paddle.y+3) | 0, (paddle.w-20) | 0, (paddle.h-6) | 0);
 
-        function updateBalls(speedMod) {
-            for (let i = balls.length - 1; i >= 0; i--) {
-                let b = balls[i];
-                if (b.attached) continue; 
-
-                b.history.unshift({x: b.x, y: b.y}); if(b.history.length > 8) b.history.pop();
-                b.x += b.dx * speedMod; b.y += b.dy * speedMod;
-
-                if (b.x + b.radius > GAME_WIDTH) { b.x = GAME_WIDTH - b.radius; b.dx *= -1; } 
-                else if (b.x - b.radius < 0) { b.x = b.radius; b.dx *= -1; }
-                if (b.y - b.radius < 0) { b.y = b.radius; b.dy *= -1; }
-                if (b.y + b.radius > GAME_HEIGHT) { balls.splice(i, 1); continue; }
-
-                if (b.y + b.radius > paddle.y && b.y - b.radius < paddle.y + paddle.height && b.x + b.radius > paddle.x && b.x - b.radius < paddle.x + paddle.width) {
-                    if (b.dy > 0) {
-                        b.y = paddle.y - b.radius; playSound('paddle');
-                        if (effects.magnet.timer > 0) {
-                            b.attached = true; b.attachOffset = b.x - paddle.x;
-                            if (b.attachOffset < 0) b.attachOffset = 0; if (b.attachOffset > paddle.width) b.attachOffset = paddle.width;
-                            b.dx = 0; b.dy = 0;
-                        } else {
-                            let hitPoint = (b.x - (paddle.x + paddle.width / 2)) / (paddle.width / 2);
-                            b.dx = b.speed * Math.sin(hitPoint * (Math.PI / 2.5)); b.dy = -b.speed * Math.cos(hitPoint * (Math.PI / 2.5));
-                            stars.forEach(s => s.y -= 1);
-                        }
-                    }
-                }
-
-                for (let r = 0; r < bricks.length; r++) {
-                    for (let c = 0; c < bricks[r].length; c++) {
-                        let brick = bricks[r][c];
-                        if (brick && brick.hp > 0) {
-                            // OPTIMIZACIÓN AABB: Salto rápido si la pelota está lejos
-                            if (b.x + b.radius < brick.x || b.x - b.radius > brick.x + brick.w ||
-                                b.y + b.radius < brick.y || b.y - b.radius > brick.y + brick.h) {
-                                continue;
+                // Bolas
+                let spdMod = effects.fast.t > 0 ? 1.5 : (effects.slow.t > 0 ? 0.6 : 1);
+                balls.forEach((b, i) => {
+                    if(b.attached) { b.x = paddle.x + b.off; b.y = paddle.y - 12; }
+                    else {
+                        b.x += b.dx * spdMod; b.y += b.dy * spdMod;
+                        if(b.x-b.r < 0 || b.x+b.r > GAME_WIDTH) b.dx *= -1; if(b.y-b.r < 0) b.dy *= -1;
+                        if(b.y+b.r > paddle.y && b.y-b.r < paddle.y+paddle.h && b.x+b.r > paddle.x && b.x-b.r < paddle.x+paddle.w && b.dy > 0) {
+                            if(effects.magnet.t > 0) { b.attached = true; b.off = b.x - paddle.x; }
+                            else {
+                                let hit = (b.x - (paddle.x+paddle.w/2))/(paddle.w/2);
+                                b.dx = 8 * Math.sin(hit * (Math.PI/2.5)); b.dy = -8 * Math.cos(hit * (Math.PI/2.5));
                             }
-
-                            let testX = b.x; let testY = b.y;
-                            if (b.x < brick.x) testX = brick.x; else if (b.x > brick.x + brick.w) testX = brick.x + brick.w;
-                            if (b.y < brick.y) testY = brick.y; else if (b.y > brick.y + brick.h) testY = brick.y + brick.h;
-
-                            let distX = b.x - testX; let distY = b.y - testY;
-                            let distance = Math.sqrt((distX*distX) + (distY*distY));
-
-                            if (distance <= b.radius) {
-                                brick.hp -= (effects.fireball.timer > 0 ? 100 : 1); playSound('brick');
-                                if (effects.poison.timer > 0 && brick.hp > 0) brick.poisoned = true;
-                                score += 10; ui.score.innerText = score;
-
-                                if (brick.hp <= 0 && brick.powerUp) drops.push({ x: brick.x + brick.w/2 - 22.5, y: brick.y + brick.h, w: 45, h: 30, type: brick.powerUp, speed: 3 });
-
-                                if (effects.fireball.timer <= 0) {
-                                    if (b.radius - Math.abs(distX) < b.radius - Math.abs(distY)) { b.dx *= -1; b.x = b.x < brick.x ? brick.x - b.radius : brick.x + brick.w + b.radius; } 
-                                    else { b.dy *= -1; b.y = b.y < brick.y ? brick.y - b.radius : brick.y + brick.h + b.radius; }
+                        }
+                        if(b.y > GAME_HEIGHT) balls.splice(i, 1);
+                        
+                        bricks.forEach(row => row.forEach(br => {
+                            if(br && br.hp > 0) {
+                                let tx = Math.max(br.x, Math.min(b.x, br.x+br.w)), ty = Math.max(br.y, Math.min(b.y, br.y+br.h));
+                                if(Math.sqrt((b.x-tx)**2 + (b.y-ty)**2) < b.r) {
+                                    if(effects.fire.t <= 0) { if(Math.abs(b.x-tx) > Math.abs(b.y-ty)) b.dx *= -1; else b.dy *= -1; }
+                                    br.hp -= (effects.fire.t > 0 ? 10 : 1); score += 10;
+                                    if(effects.poison.t > 0) br.poisoned = true;
+                                    if(br.hp <= 0 && br.p) drops.push({x:br.x+br.w/2-17, y:br.y, p:br.p});
                                 }
                             }
-                        }
+                        }));
                     }
-                }
+                    
+                    // Renderizado de pelota con coordenadas enteras
+                    ctx.beginPath(); ctx.arc(b.x | 0, b.y | 0, b.r, 0, Math.PI*2); ctx.fillStyle = effects.fire.t>0?'#fcd34d':'white'; ctx.fill();
+                });
             }
 
-            for (let r = 0; r < bricks.length; r++) {
-                for (let c = 0; c < bricks[r].length; c++) {
-                    let brick = bricks[r][c];
-                    if (brick && brick.hp > 0 && brick.poisoned) {
-                        brick.poisonTimer++;
-                        if (brick.poisonTimer >= 30) { 
-                            brick.hp -= 1; brick.poisonTimer = 0; score += 5; ui.score.innerText = score;
-                            if (brick.hp <= 0 && brick.powerUp) drops.push({ x: brick.x + brick.w/2 - 22.5, y: brick.y + brick.h, w: 45, h: 30, type: brick.powerUp, speed: 3 });
-                        }
-                    }
-                }
-            }
-
-            let activeBricks = 0;
-            for (let r = 0; r < bricks.length; r++) { for (let c = 0; c < bricks[r].length; c++) { if (bricks[r][c] && bricks[r][c].hp > 0) activeBricks++; } }
-
-            if (balls.length === 0 && !isPaddleExploding) {
-                isPaddleExploding = true;
-                let pColor = effects.expand.timer > 0 ? '#34d399' : (effects.shrink.timer > 0 ? '#ef4444' : paddle.color);
-                paddleParticles = [];
-                for (let i = 0; i < 40; i++) {
-                    paddleParticles.push({ x: paddle.x + Math.random() * paddle.width, y: paddle.y + Math.random() * paddle.height, vx: (Math.random() - 0.5) * 15, vy: (Math.random() - 1) * 10, life: 1.0, color: Math.random() > 0.3 ? pColor : '#ffffff', size: Math.random() * 8 + 4, rot: Math.random() * Math.PI * 2, vrot: (Math.random() - 0.5) * 0.4 });
-                }
-
-                explosionTimeout = setTimeout(() => {
-                    lives--; ui.lives.innerText = lives; resetAllEffects(); isPaddleExploding = false;
-                    if (lives <= 0) showGameOver(); else { paddle.width = PADDLE_BASE_WIDTH; resetBalls(); }
+            // Gestionar Vidas / Victoria
+            if(balls.length === 0 && !isExploding) {
+                isExploding = true;
+                let pCol = effects.expand.t > 0 ? '#34d399' : (effects.shrink.t > 0 ? '#ef4444' : '#38bdf8');
+                for(let i=0; i<40; i++) particles.push({ x:paddle.x+Math.random()*paddle.w, y:paddle.y, vx:(Math.random()-0.5)*15, vy:(Math.random()-1)*10, life:1, c:pCol, s:Math.random()*8+4 });
+                setTimeout(() => {
+                    lives--; updateUI(); resetPowers();
+                    if(lives <= 0) showGameOver(); else setupLevel();
                 }, 1500);
-
-            } else if (activeBricks === 0 && !isPaddleExploding) {
-                if (level >= maxLevels) showGameBeaten();
-                else { saveProgress(level + 1); showVictory(); }
+            } else if(activeBricks === 0 && !isExploding) {
+                isPlaying = false; 
+                if(level >= 100) document.getElementById('game-beaten-screen').classList.add('active');
+                else { saveProg(level+1); document.getElementById('screen-victory').classList.add('active'); }
             }
-        }
 
-        function resetAllEffects() {
-            for (const key in effects) effects[key].timer = 0;
-            drops = []; bullets = []; renderHUD();
-        }
-
-        // --- BUCLE PRINCIPAL ---
-        function update() {
-            if (!isPlaying) return;
-            drawBackground();
-            drawBricks();
-            drawDrops();
-
-            if (isPaddleExploding) {
-                for (let i = paddleParticles.length - 1; i >= 0; i--) {
-                    let p = paddleParticles[i];
-                    p.x += p.vx; p.y += p.vy; p.vy += 0.5; p.rot += p.vrot; p.life -= 0.015;
-                    if (p.life <= 0) { paddleParticles.splice(i, 1); continue; }
-                    ctx.globalAlpha = p.life; ctx.fillStyle = p.color; ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.rot); ctx.fillRect(-p.size/2, -p.size/2, p.size, p.size); ctx.restore();
-                }
-                ctx.globalAlpha = 1.0;
-            } else {
-                drawBullets(); drawPaddle(); drawBalls(); movePaddle(); updateDrops(); updateBullets(); updateBalls(updateEffects());
+            // UI
+            Object.keys(effects).forEach(k => { if(effects[k].t > 0) effects[k].t--; });
+            renderHUD();
+            
+            // OPTIMIZACIÓN DEL DOM: Solo actualiza el HTML si la puntuación ha cambiado.
+            let currentScoreInt = Math.floor(score);
+            if (currentScoreInt !== lastRenderedScore) {
+                document.getElementById('ui-score').innerText = currentScoreInt;
+                lastRenderedScore = currentScoreInt;
             }
+            
             animationId = requestAnimationFrame(update);
         }
 
-        function startGame() {
-            cancelAnimationFrame(animationId); if(explosionTimeout) clearTimeout(explosionTimeout);
-            isPaddleExploding = false; ui.start.classList.remove('active');
-            updateWorldTheme(); createBricks(level); resetBalls(); isPlaying = true; update();
+        // --- FUNCIONES DE CONTROL ---
+        function updateUI() {
+            let world = Math.min(Math.floor((level-1)/10)+1, 10);
+            let lvlInW = ((level-1)%10)+1;
+            let theme = worldThemes[world-1];
+            document.getElementById('ui-world-level').innerText = `MUNDO ${world} - NIVEL ${lvlInW}`;
+            document.getElementById('ui-world-level').style.color = theme.text;
+            document.getElementById('ui-lives').innerText = lives;
+            document.getElementById('ui-saved-info').innerText = `PROGRESO: NIVEL ${maxLvl}`;
         }
 
-        function retryLevel() {
-            cancelAnimationFrame(animationId); if(explosionTimeout) clearTimeout(explosionTimeout);
-            isPaddleExploding = false; ui.gameOver.classList.remove('active');
-            score = 0; lives = 3; ui.score.innerText = score; ui.lives.innerText = lives;
-            paddle.width = PADDLE_BASE_WIDTH; resetAllEffects(); updateWorldTheme(); createBricks(level); resetBalls(); isPlaying = true; update();
+        function renderHUD() {
+            const container = document.getElementById('active-powers-hud');
+            container.innerHTML = '';
+            Object.keys(effects).forEach(k => {
+                if(effects[k].t > 0) {
+                    const div = document.createElement('div'); div.className = 'power-bar-container';
+                    const fill = document.createElement('div'); fill.className = 'power-bar-fill';
+                    fill.style.background = effects[k].c; fill.style.transform = `scaleX(${effects[k].t/effects[k].max})`;
+                    const txt = document.createElement('div'); txt.className = 'power-bar-text'; txt.innerText = effects[k].label;
+                    div.append(fill, txt); container.append(div);
+                }
+            });
         }
 
-        function nextLevel() {
-            cancelAnimationFrame(animationId); if(explosionTimeout) clearTimeout(explosionTimeout);
-            isPaddleExploding = false; ui.victory.classList.remove('active');
-            level++; paddle.width = PADDLE_BASE_WIDTH; resetAllEffects(); updateWorldTheme(); createBricks(level); resetBalls(); isPlaying = true; update();
-        }
+        function saveProg(l) { if(l > maxLvl) { maxLvl = l; localStorage.setItem('laserPanicMax', maxLvl); } }
+        function resetPowers() { Object.keys(effects).forEach(k => effects[k].t = 0); drops = []; bullets = []; }
 
         function showGameOver() {
-            isPlaying = false; cancelAnimationFrame(animationId); ui.fScore.innerText = score;
-            if (score > 0) {
-                ui.saveScoreSec.style.display = 'flex'; ui.playerNameInput.style.display = 'block'; ui.submitScoreBtn.style.display = 'block';
-                ui.submitScoreBtn.disabled = false; ui.submitScoreBtn.innerText = "Guardar Online"; ui.saveStatusMsg.style.display = 'none'; ui.playerNameInput.value = '';
-            } else { ui.saveScoreSec.style.display = 'none'; }
-            ui.gameOver.classList.add('active');
+            isPlaying = false; document.getElementById('ui-final-score').innerText = Math.floor(score);
+            document.getElementById('save-area').style.display = score > 0 ? 'flex' : 'none';
+            document.getElementById('screen-gameover').classList.add('active');
         }
 
-        function showVictory() { isPlaying = false; cancelAnimationFrame(animationId); ui.victory.classList.add('active'); }
-        function showGameBeaten() { isPlaying = false; cancelAnimationFrame(animationId); document.getElementById('absolute-final-score').innerText = score; ui.beaten.classList.add('active'); }
-
-        // --- CONTROLES ---
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'ArrowRight' || e.key === 'd') paddle.dx = paddle.speed;
-            else if (e.key === 'ArrowLeft' || e.key === 'a') paddle.dx = -paddle.speed;
-            else if (e.key === ' ' || e.key === 'Spacebar') { e.preventDefault(); launchBall(); shoot(); }
-        });
-        document.addEventListener('keyup', (e) => { if (['ArrowRight', 'd', 'ArrowLeft', 'a'].includes(e.key)) paddle.dx = 0; });
-
-        function mouseMoveHandler(e) {
-            if (!isPlaying) return;
-            const rect = canvas.getBoundingClientRect(); const scaleX = GAME_WIDTH / rect.width; const relativeX = (e.clientX - rect.left) * scaleX;
-            let newX = relativeX - paddle.width / 2;
-            if (newX < 0) newX = 0; if (newX > GAME_WIDTH - paddle.width) newX = GAME_WIDTH - paddle.width;
-            paddle.x = newX;
+        function updateRankingUI() {
+            const list = document.getElementById('list-ranking');
+            list.innerHTML = globalScores.length ? '' : '<p>Sé el primero en jugar</p>';
+            globalScores.forEach((s, i) => {
+                const li = document.createElement('li');
+                if(user && s.userId === user.uid) li.className = 'current-user';
+                li.innerHTML = `<span>${i+1}. ${s.name}</span> <span>${Math.floor(s.score)}</span>`;
+                list.append(li);
+            });
         }
-        document.addEventListener('mousemove', mouseMoveHandler);
-        document.addEventListener('mousedown', (e) => { if(e.target.tagName !== 'BUTTON' && e.target.tagName !== 'INPUT' && !e.target.classList.contains('pause-btn')) { if (isPlaying) { launchBall(); shoot(); } } });
 
-        document.addEventListener('touchmove', (e) => {
-            if(isPlaying) {
-                e.preventDefault(); 
-                const rect = canvas.getBoundingClientRect(); const scaleX = GAME_WIDTH / rect.width; const relativeX = (e.touches[0].clientX - rect.left) * scaleX;
-                let newX = relativeX - paddle.width / 2;
-                if (newX < 0) newX = 0; if (newX > GAME_WIDTH - paddle.width) newX = GAME_WIDTH - paddle.width;
-                paddle.x = newX;
+        // --- EVENTOS ---
+        document.getElementById('btn-play').onclick = () => { level = maxLvl; document.getElementById('screen-start').classList.remove('active'); setupLevel(); isPlaying = true; update(); };
+        document.getElementById('btn-next').onclick = () => { level++; document.getElementById('screen-victory').classList.remove('active'); setupLevel(); isPlaying = true; };
+        document.getElementById('btn-retry').onclick = () => { score = 0; lastRenderedScore = -1; lives = 3; document.getElementById('screen-gameover').classList.remove('active'); setupLevel(); isPlaying = true; };
+        document.getElementById('btn-to-menu').onclick = () => location.reload();
+        document.getElementById('btn-pause').onclick = () => { if(isPlaying && !isExploding) { isPlaying = false; document.getElementById('screen-pause').classList.add('active'); } };
+        document.getElementById('btn-resume').onclick = () => { isPlaying = true; document.getElementById('screen-pause').classList.remove('active'); update(); };
+        document.getElementById('btn-quit').onclick = () => location.reload();
+        document.getElementById('btn-open-ranking').onclick = () => document.getElementById('screen-ranking').classList.add('active');
+        document.getElementById('btn-close-ranking').onclick = () => document.getElementById('screen-ranking').classList.remove('active');
+        
+        document.getElementById('btn-open-levels').onclick = () => {
+            const grid = document.getElementById('level-select-grid'); grid.innerHTML = '';
+            for(let i=1; i<=100; i++) {
+                const b = document.createElement('div'); b.className = i <= maxLvl ? 'lvl-box' : 'lvl-box locked';
+                b.innerText = i; if(i <= maxLvl) b.onclick = () => { level = i; document.getElementById('screen-levels').classList.remove('active'); document.getElementById('screen-start').classList.remove('active'); setupLevel(); isPlaying = true; update(); };
+                grid.append(b);
             }
-        }, { passive: false });
+            document.getElementById('screen-levels').classList.add('active');
+        };
+        document.getElementById('btn-close-levels').onclick = () => document.getElementById('screen-levels').classList.remove('active');
 
-        document.addEventListener('touchstart', (e) => {
-            if(isPlaying) {
-                if(e.target.tagName !== 'BUTTON' && e.target.tagName !== 'INPUT' && !e.target.classList.contains('pause-btn')) {
-                    e.preventDefault(); launchBall(); shoot();
-                    const rect = canvas.getBoundingClientRect(); const scaleX = GAME_WIDTH / rect.width; const relativeX = (e.touches[0].clientX - rect.left) * scaleX;
-                    let newX = relativeX - paddle.width / 2;
-                    if (newX < 0) newX = 0; if (newX > GAME_WIDTH - paddle.width) newX = GAME_WIDTH - paddle.width;
-                    paddle.x = newX;
-                }
-            }
-        }, { passive: false });
+        document.getElementById('btn-submit-score').onclick = async () => {
+            const alias = document.getElementById('input-alias').value.trim().toUpperCase() || "PILOTO";
+            document.getElementById('btn-submit-score').disabled = true;
+            const ok = await saveScoreToFirebase(alias, Math.floor(score));
+            document.getElementById('save-status-msg').style.display = 'block';
+            document.getElementById('save-status-msg').innerText = ok ? "¡GUARDADO!" : "ERROR DE CONEXIÓN";
+        };
 
-        renderHUD(); updateWorldTheme(); drawBackground(); drawPaddle();
+        // Controles
+        window.onkeydown = e => { if(e.key==='ArrowLeft'||e.key==='a') paddle.dx=-12; if(e.key==='ArrowRight'||e.key==='d') paddle.dx=12; if(e.key===' '){ e.preventDefault(); launch(); } };
+        window.onkeyup = () => paddle.dx = 0;
+        function launch() { 
+            balls.forEach(b => { if(b.attached) { b.attached = false; b.dx = (b.off-60)*0.2; b.dy = -8; } }); 
+            if(effects.gun.t > 0) bullets.push({x:paddle.x+15, y:paddle.y}, {x:paddle.x+paddle.w-15, y:paddle.y});
+        }
+        canvas.onmousedown = (e) => { if(isPlaying) launch(); };
+        canvas.ontouchstart = (e) => { e.preventDefault(); if(isPlaying) launch(); };
+        canvas.onmousemove = e => { let r = canvas.getBoundingClientRect(); paddle.x = (e.clientX-r.left)*(GAME_WIDTH/r.width) - paddle.w/2; };
+        canvas.ontouchmove = e => { e.preventDefault(); let r = canvas.getBoundingClientRect(); paddle.x = (e.touches[0].clientX-r.left)*(GAME_WIDTH/r.width) - paddle.w/2; };
+
+        updateUI();
     </script>
 </body>
 </html>
